@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html> 
+<head>
+    <title>就活管理アプリ</title>
+</head>
+<body>
+    <h1>就活管理アプリ</h1>
+
+<form action="/add" method="post">
+    <p>企業名</p>
+    <input type="text" name="company_name">
+
+    <p>マイページURL</p>
+    <input type="text" name="mypage_url">
+
+    <p>ID</p>
+    <input type="text" name="login_id">
+
+    <p>パスワード</p>
+    <input type="text" name="password">
+
+    <p>ES</p>
+    <textarea name="es_text" rows="10" cols="60"></textarea>
+    
+    <p>締め切り</p>
+    <input type="date" name="deadline">
+
+    <p>開催日</p>
+    <input type="date" name="event_date">
+
+    <p>合否</p>
+    <select name="result">
+        <option value="未応募">未応募</option>
+        <option value="ES提出済み">ES提出済み</option>
+        <option value="一次選考">一次選考</option>
+        <option value="二次選考">二次選考</option>
+        <option value="三次選考">三次選考</option>
+        <option value="内々定">内々定</option>
+        <option value="内定">内定</option>
+        <option value="不合格">不合格</option>
+    </select>
+
+    <p>メモ</p>
+    <textarea name="memo" rows="5" cols="60"></textarea>
+
+    <br><br>
+
+
+    <button type="submit">登録</button>
+</form>
+
+</body>
+</html>
+
+    
+
+
+
+</body>

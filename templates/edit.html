@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>企業情報編集</title>
+</head>
+<body>
+
+<h1>企業情報編集</h1>
+
+<form action="/update/{{ company.id }}" method="post">
+
+    <p>企業名</p>
+    <input type="text" name="company_name" value="{{ company.company_name }}">
+
+    <p>マイページURL</p>
+    <input type="text" name="mypage_url" value="{{ company.mypage_url }}">
+
+    <p>ID</p>
+    <input type="text" name="login_id" value="{{ company.login_id }}">
+
+    <p>パスワード</p>
+    <input type="text" name="password" value="{{ company.password }}">
+
+    <p>ES</p>
+    <textarea name="es_text">{{ company.es_text }}</textarea>
+
+    <p>締切</p>
+    <input type="date" name="deadline" value="{{ company.deadline }}">
+
+    <p>開催日</p>
+    <input type="date" name="event_date" value="{{ company.event_date }}">
+
+    <p>選考状況</p>
+    <input type="text" name="result" value="{{ company.result }}">
+
+    <p>メモ</p>
+    <textarea name="memo">{{ company.memo }}</textarea>
+
+    <br><br>
+
+    <button type="submit">保存</button>
+
+</form>
+
+</body>
+</html>

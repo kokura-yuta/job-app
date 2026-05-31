@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>企業一覧</title>
+
+    <style>
+    .company-card h2{
+        margin-top: 0;
+        color:#333;
+    }
+    body{
+        font-family: Arial, sans-self;
+        background:#f5f7fa;
+        margin:30px;
+
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .company-card{
+        background:white;
+        padding:20px;
+        margin-bottom:20px;
+        border-radius:12px;
+        box-shadow:0 2px 10px rgba(0,0,0,0.1);
+        max-width: 800px;
+    }
+    h1{
+        text-align:center;
+    }
+
+    button{
+        background:#56af4c;
+        color:white;
+        border:none;
+        padding:8px 15px;
+        border-radius:8px;
+        cursor:pointer;
+    }
+
+    button:hover{
+        opacity:0.8;
+    }
+
+    .action-buttons{
+        display:flex;
+        gap:10px;
+        margin-top:15px;
+    }
+
+    .delete-btn{
+        background:#e74c3c;
+    }
+
+    .edit-btn{
+        background:#3498db;
+    }
+
+    .search-box{
+        text-align:center;
+        margin-bottom: 20px;
+    }
+
+    .search-box{
+        padding: 10px;
+        width: 250px;
+        border-radius: 8px;
+        border:1px solid #ccc;
+    }
+
+    .company-card p{
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    </style>
+</head>
+<body>
+    <h1>登録企業一覧</h1>
+    <div action="search-box">
+    <form action="/list" method="get">
+        <input type="text" name="keyword" placeholder="企業名で検索">
+        <button type="submit">検索</button>
+        <br>
+    </form>
+    </div>
+    <a href="/">
+        <button type="button">+ 企業を登録する</button>
+    </a>
+
+    {% for company in companies %}
+    <div class="company-card">
+       <hr>
+       <h2>企業名: {{ company.company_name }}</h2>
+       <p>
+          マイページURL:
+          <a href="{{ company.mypage_url }}" target="_blank">
+            {{ company.mypage_url }}    
+          </a>
+        </p>
+       <p>ID: 
+        <span id="login-id-{{ company.id }}">{{ company.login_id }}</span>
+        <button type="button" onclick="copyText('login-id-{{ company.id }}')">コピー</button>
+       </p>
+       <p>パスワード: {{ company.password }}</p>
+       <p>ES: {{ company.es_text }}</p>
+       <p>締め切り: {{ company.deadline }}</p>
+       <p>開催日: {{ company.event_date }}</p>
+       <p>
+       合否: 
+       {% if company.result == "内定" or company.result == "内々定" %}
+       <span style="color: red;">{{company.result}}</span>
+       {% elif company.result == "不合格" %}
+       <span style="color: orange;">{{company.result}}</span>
+       {% elif company.result == "一次選考" or company.result == "二次選考" or company.result == "三次選考" %}
+       <span style="color: orange;">{{company.result}}</span>
+       {% elif company.result == "ES提出済み" %}
+       <span style="color: blue;">{{company.result}}</span>
+
+       {% else %}
+           {{ company.result }}
+       {% endif %}
+       </p> 
+       <p>メモ: {{ company.memo }}</p>
+
+    <div class="action-buttons">
+       <a href="/edit/{{ company.id }}">
+           <button type="button" class="edit-btn">編集</button> 
+       </a>
+
+       <form action="/delete/{{ company.id }}" method="post">
+           <button type="submit" class="delete-btn">削除</button>
+       </form>
+    </div>
+    </div>
+    {% endfor %}
+    <script>
+    function copyText(id){
+        const text = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(text);
+        aleart("コピーしました: " + text);
+        
+    }
+    </script>
+</body>
+</html>
