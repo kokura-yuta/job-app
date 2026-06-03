@@ -75,6 +75,9 @@
     </style>
 </head>
 <body>
+    <a href="/logout">
+        <button type="button">ログアウト</button>
+    </a>
     <h1>登録企業一覧</h1>
     <div action="search-box">
     <form action="/list" method="get">
@@ -83,10 +86,11 @@
         <br>
     </form>
     </div>
-    <a href="/">
+    <a href="/?user_id={{ user_id }}">
         <button type="button">+ 企業を登録する</button>
     </a>
-
+    {% for genre, companies in grouped_companies.items() %}
+    <h2>{{ genre }}</h2>
     {% for company in companies %}
     <div class="company-card">
        <hr>
@@ -105,8 +109,10 @@
        <p>ES: {{ company.es_text }}</p>
        <p>締め切り: {{ company.deadline }}</p>
        <p>開催日: {{ company.event_date }}</p>
+       <p>ジャンル: {{ company.genre }}</p>
+       <p>志望度: {{ company.priority }}</p>
        <p>
-       合否: 
+       選考状況: 
        {% if company.result == "内定" or company.result == "内々定" %}
        <span style="color: red;">{{company.result}}</span>
        {% elif company.result == "不合格" %}
@@ -123,7 +129,7 @@
        <p>メモ: {{ company.memo }}</p>
 
     <div class="action-buttons">
-       <a href="/edit/{{ company.id }}">
+       <a href="/edit/{{ company.id }}?user_id={{ user_id }}">
            <button type="button" class="edit-btn">編集</button> 
        </a>
 
@@ -132,6 +138,7 @@
        </form>
     </div>
     </div>
+    {% endfor %}
     {% endfor %}
     <script>
     function copyText(id){

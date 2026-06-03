@@ -7,6 +7,7 @@
     <h1>就活管理アプリ</h1>
 
 <form action="/add" method="post">
+<input type="hidden" name="user_id" value="{{ user_id }}">
     <p>企業名</p>
     <input type="text" name="company_name">
 
@@ -28,18 +29,45 @@
     <p>開催日</p>
     <input type="date" name="event_date">
 
-    <p>合否</p>
-    <select name="result">
-        <option value="未応募">未応募</option>
-        <option value="ES提出済み">ES提出済み</option>
-        <option value="一次選考">一次選考</option>
-        <option value="二次選考">二次選考</option>
-        <option value="三次選考">三次選考</option>
-        <option value="内々定">内々定</option>
-        <option value="内定">内定</option>
-        <option value="不合格">不合格</option>
+
+    <p>ジャンル</p>
+    <select name="genre">
+    <option value="エンジニア">エンジニア</option>
+    <option value="AI・データサイエンス">AI・データサイエンス</option>
+    <option value="ITコンサル">ITコンサル</option>
+    <option value="コンサル">コンサル</option>
+    <option value="マーケティング">マーケティング</option>
+    <option value="営業">営業</option>
+    <option value="企画">企画</option>
+    <option value="人事">人事</option>
+    <option value="金融">金融</option>
+    <option value="商社">商社</option>
+    <option value="メーカー">メーカー</option>
+    <option value="広告・PR">広告・PR</option>
+    <option value="不動産">不動産</option>
+    <option value="公務員">公務員</option>
+    <option value="その他">その他</option>
     </select>
 
+    <p>志望度</p>
+    <select name="priority">
+    <option value="高">高</option>
+    <option value="中">中</option>
+    <option value="低">低</option>
+    <option value="未設定">未設定</option>
+    </select>
+
+     <p>選考状況</p>
+    <select name="result">
+    <option value="未応募">未応募</option>
+    <option value="ES提出済み">ES提出済み</option>
+    <option value="一次選考">一次選考</option>
+    <option value="二次選考">二次選考</option>
+    <option value="三次選考">三次選考</option>
+    <option value="内々定">内々定</option>
+    <option value="内定">内定</option>
+    <option value="不合格">不合格</option>
+    </select>
     <p>メモ</p>
     <textarea name="memo" rows="5" cols="60"></textarea>
 

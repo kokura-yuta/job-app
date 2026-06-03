@@ -19,17 +19,43 @@ CREATE TABLE IF NOT EXISTS companies (
     deadline TEXT,
     event_date TEXT,
     result TEXT,
-    memo TEXT)
+    memo TEXT,
+    genre TEXT,
+    priority TEXT)
 """)
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    password TEXT
+)
+""")
+try:
+    cursor.execute("ALTER TABLE companies ADD COLUMN genre TEXT")
+except sqlite3.OperationalError:
+    pass
+
+try:
+    cursor.execute("ALTER TABLE companies ADD COLUMN priority TEXT")
+except sqlite3.OperationalError:
+    pass
+
+try:
+    cursor.execute("ALTER TABLE companies ADD COLUMN user_id INTEGER")
+except sqlite3.OperationalError:
+    pass
+
 
 conn.commit()
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
+def home(request: Request, user_id: int):
     return templates.TemplateResponse(
         request=request,
-        name="index.html"
+        name="index.html",
+        context={"user_id": user_id}
     )
 
 @app.post("/add")
@@ -42,7 +68,10 @@ def add_company(
     deadline: str = Form(""),
     event_date: str = Form(""),
     result: str = Form("未定"),
-    memo: str = Form("")
+    memo: str = Form(""),
+    genre: str = Form(""),
+    priority: str = Form(""),
+    user_id: int = Form(...)
 
 ):
     cursor.execute("""
@@ -55,9 +84,12 @@ def add_company(
         deadline,
         event_date,
         result,
-        memo
+        memo,
+        genre,
+        priority,
+        user_id
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """, (
     company_name,
         mypage_url,
@@ -67,25 +99,40 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         deadline,
         event_date,
         result,
-        memo
+        memo,
+        genre,
+        priority,
+        user_id
 
 ))
 
     conn.commit()
 
     return RedirectResponse(
-            url="/list",
+            url=f"/list?user_id={user_id}",
             status_code=303
     )
 @app.get("/list", response_class=HTMLResponse)
-def show_list(request: Request, keyword: str = Query("")):
+def show_list(request: Request, user_id: int, keyword: str = Query("")):
     if keyword:
         cursor.execute(
-            "SELECT * FROM companies WHERE company_name LIKE? ORDER BY deadline ASC",
-            (f"%{keyword}%",)
+            """
+            SELECT * FROM companies 
+            WHERE user_id = ?
+            AND company_name LIKE ?
+            ORDER BY deadline ASC
+            """,
+            (user_id, f"%{keyword}%",)
         )
     else:
-        cursor.execute("SELECT * FROM companies ORDER BY deadline ASC")
+        cursor.execute(
+            """
+            SELECT * FROM companies 
+            WHERE user_id = ?
+            ORDER BY deadline ASC
+            """,
+            (user_id,)
+        )
     rows = cursor.fetchall()
     print(rows)
 
@@ -102,13 +149,27 @@ def show_list(request: Request, keyword: str = Query("")):
             "event_date":row[7],
             "result":row[8],
             "memo":row[9],
+            "genre":row[10],
+            "priority":row[11]
+
         }
 
         companies.append(company)
+    
+    grouped_companies = {}
+
+    for company in companies:
+        genre = company.get("genre") or "未設定"
+        if genre not in grouped_companies:
+            grouped_companies[genre] = []
+        grouped_companies[genre].append(company)
+
     return templates.TemplateResponse(
         request=request,
         name="list.html",
-        context={"companies": companies}
+        context={"companies": companies,
+                 "grouped_companies": grouped_companies,
+                 "user_id": user_id}
 )
 
 @app.post("/delete/{id}")
@@ -117,12 +178,12 @@ def delete_company(id: int):
     conn.commit()
 
     return RedirectResponse(
-        url="/list",
+        url=f"/list?user_id={user[0]}",
         status_code=303
     )
 
 @app.get("/edit/{id}")
-def edit_company(id: int, request: Request):
+def edit_company(id: int, request: Request, user_id: int):
 
     cursor.execute(
         "SELECT * FROM companies WHERE id = ?", 
@@ -132,7 +193,7 @@ def edit_company(id: int, request: Request):
     
     if row is None:
         return RedirectResponse(
-            url="/list",
+            url=f"/list?user_id={user_id}",
             status_code=303
         )
 
@@ -147,13 +208,17 @@ def edit_company(id: int, request: Request):
         "event_date":row[7],
         "result":row[8],
         "memo":row[9],
+        "genre":row[10],
+        "priority":row[11],
+        "user_id":row[12]
 
     }
 
     return templates.TemplateResponse(
         request=request,
         name="edit.html",
-        context={"company": company}
+        context={"company": company,
+        "user_id": user_id}
     )
 
 
@@ -170,7 +235,10 @@ def update_company(
     deadline: str = Form(""),
     event_date: str = Form(""),
     result: str = Form(""),
-    memo: str = Form("")
+    memo: str = Form(""),
+    genre: str = Form(""),
+    priority: str = Form(""),
+    user_id: int = Form("")
 ):
     cursor.execute("""
     UPDATE companies
@@ -183,8 +251,10 @@ def update_company(
         deadline = ?,
         event_date = ?,
         result = ?,
-        memo = ?
-    WHERE id = ?
+        memo = ?,
+        genre = ?,
+        priority = ?
+    WHERE id = ? AND user_id = ?
     """, (
         company_name,
         mypage_url,
@@ -195,12 +265,91 @@ def update_company(
         event_date,
         result,
         memo,
-        id
+        genre,
+        priority,
+        id,
+        user_id
     ))
 
     conn.commit()
 
     return RedirectResponse(
-        url="/list",
+        url=f"/list?user_id={user_id}",
         status_code=303
     )
+@app.get("/register", response_class=HTMLResponse)
+def register_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="register.html"
+    )
+
+@app.post("/register")
+def register_user(
+    username: str = Form(...),
+    password: str = Form(...)
+):
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+        """
+        INSERT INTO users (username, password)
+        VALUES (?,?)
+        """,
+        (username, password)
+     )
+
+        conn.commit()
+
+    except sqlite3.IntegrityError:
+      return HTMLResponse("このユーザー名はすでに使われています")
+
+    return RedirectResponse(
+        url="/login",
+        status_code=303
+)
+
+@app.get("/login")
+def login_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html"
+    )
+@app.post("/login")
+def login_user(
+    username: str = Form(...),
+    password: str = Form(...)
+):
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT * FROM users
+        WHERE username = ? AND password = ?
+        """,
+        (username, password)
+    )
+
+    user = cursor.fetchone()
+
+    if user:
+        return RedirectResponse(
+            url=f"/list?user_id={user[0]}",
+            status_code=303
+        )
+    else:
+        return RedirectResponse(
+            url="/login",
+            status_code=303
+        )
+@app.get("/logout")
+def logout():
+    return RedirectResponse(
+        url="/login",
+        status_code=303
+    )
+
+
+

@@ -6,9 +6,10 @@
 <body>
 
 <h1>企業情報編集</h1>
-
+<p>確認用 user_id: {{ company_id }}</p>
 <form action="/update/{{ company.id }}" method="post">
-
+   
+    <input type="hidden" name="user_id" value="{{ company.user_id }}">
     <p>企業名</p>
     <input type="text" name="company_name" value="{{ company.company_name }}">
 
@@ -28,10 +29,47 @@
     <input type="date" name="deadline" value="{{ company.deadline }}">
 
     <p>開催日</p>
+    
     <input type="date" name="event_date" value="{{ company.event_date }}">
+    <p>ジャンル</p>
+<select name="genre">
+    <option value="エンジニア">エンジニア</option>
+    <option value="コンサル">コンサル</option>
+    <option value="マーケ">マーケ</option>
+    <option value="AI・データサイエンス">AI・データサイエンス</option>
+    <option value="ITコンサル">ITコンサル</option>
+    <option value="営業">営業</option>
+    <option value="企画">企画</option>
+    <option value="人事">人事</option>
+    <option value="金融">金融</option>
+    <option value="商社">商社</option>
+    <option value="メーカー">メーカー</option>
+    <option value="広告・PR">広告・PR</option>
+    <option value="不動産">不動産</option>
+    <option value="公務員">公務員</option>
+    <option value="その他">その他</option>
+    </select>
+</select>
+
+     <p>志望度</p>
+<select name="priority">
+    <option value="高">高</option>
+    <option value="中">中</option>
+    <option value="低">低</option>
+    <option value="未設定">未設定</option>
+</select>
 
     <p>選考状況</p>
-    <input type="text" name="result" value="{{ company.result }}">
+    <select type="text" name="result" value="{{ company.result }}">
+        <option value="未応募">未応募</option>
+        <option value="ES提出済み">ES提出済み</option>
+        <option value="一次選考">一次選考</option>
+        <option value="二次選考">二次選考</option>
+        <option value="三次選考">三次選考</option>
+        <option value="内々定">内々定</option>
+        <option value="内定">内定</option>
+        <option value="不合格">不合格</option>
+</select>
 
     <p>メモ</p>
     <textarea name="memo">{{ company.memo }}</textarea>
