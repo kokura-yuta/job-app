@@ -107,6 +107,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ))
 
     conn.commit()
+    conn.close()
 
     return RedirectResponse(
             url=f"/list?user_id={user_id}",
