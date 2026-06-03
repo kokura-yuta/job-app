@@ -6,6 +6,13 @@ import calendar
 from datetime import datetime
 
 app = FastAPI()
+
+@app.get("/")
+def home():
+    return RedirectResponse(
+        url="/list?user_id=3",
+        ststus_code=303
+    )
 companies = []
 
 conn = sqlite3.connect("job_app.db", check_same_thread=False)
