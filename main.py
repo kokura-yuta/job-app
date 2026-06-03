@@ -11,7 +11,7 @@ app = FastAPI()
 def home():
     return RedirectResponse(
         url="/list?user_id=3",
-        ststus_code=303
+        status_code=303
     )
 companies = []
 
