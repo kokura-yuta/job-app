@@ -10,7 +10,7 @@ app = FastAPI()
 @app.get("/")
 def home():
     return RedirectResponse(
-        url="/list?user_id=3",
+        url="/login",
         status_code=303
     )
 companies = []
