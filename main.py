@@ -2,6 +2,8 @@ from fastapi import FastAPI, Request, Form, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 import sqlite3
+import calendar
+from datetime import datetime
 
 app = FastAPI()
 companies = []
@@ -31,10 +33,32 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT
 )
 """)
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    company_id INTEGER,
+    title TEXT,
+    start_datetime TEXT,
+    end_datetime TEXT,
+    memo TEXT
+)
+""")
 try:
     cursor.execute("ALTER TABLE companies ADD COLUMN genre TEXT")
 except sqlite3.OperationalError:
     pass
+
+try:
+    cursor.execute("ALTER TABLE events ADD COLUMN location TEXT")
+except sqlite3.OperationalError:
+    pass
+
+try: 
+    cursor.execute("ALTER TABLE events ADD COLUMN event_type TEXT")
+except sqlite3.OperationalError:
+    pass
+
 
 try:
     cursor.execute("ALTER TABLE companies ADD COLUMN priority TEXT")
@@ -173,16 +197,187 @@ def show_list(request: Request, user_id: int, keyword: str = Query("")):
                  "user_id": user_id}
 )
 
+@app.get("/company/{company_id}", response_class=HTMLResponse)
+def company_detail(
+    request: Request, 
+    company_id: int, 
+    user_id: int
+):
+    cursor.execute(
+        """
+        SELECT * FROM companies
+        WHERE id = ?
+        AND user_id = ?
+        """,
+        (company_id, user_id)
+    )
+
+    row = cursor.fetchone()
+
+    if not row:
+        return HTMLResponse("企業が見つかりません, status_code=404")
+
+    cursor.execute(
+       """
+       SELECT * FROM events
+       WHERE company_id = ?
+       ORDER BY start_datetime ASC
+       """,
+       (company_id,)
+)
+
+    event_rows = cursor.fetchall()
+
+
+    company = {
+       "id": row[0],
+       "company_name": row[1],
+       "mypage_url": row[2],
+       "login_id": row[3],
+       "password": row[4],
+       "es_text": row[5],
+       "deadline": row[6],
+       "event_date": row[7],
+       "result": row[8],
+       "memo": row[9],
+       "genre": row[10],
+       "priority": row[11],
+       "user_id": row[12]
+   }
+    return templates.TemplateResponse(
+       request=request,
+       name="company_detail.html",
+       context={
+           "company": company,
+           "user_id": user_id,
+           "events": event_rows
+           }
+   )
+
 @app.post("/delete/{id}")
-def delete_company(id: int):
+def delete_company(id: int, user_id: int):
     cursor.execute("DELETE FROM companies WHERE id = ?", (id,))
     conn.commit()
 
     return RedirectResponse(
-        url=f"/list?user_id={user[0]}",
+        url=f"/list?user_id={user_id}",
         status_code=303
     )
 
+
+@app.post("/add_event/{company_id}")
+def add_event(
+    company_id: int, 
+    user_id: int, 
+    title: str = Form(""),
+    start_date: str = Form(""),
+    start_time: str = Form(""),
+    end_date: str = Form(""),
+    end_time: str = Form(""),
+    location: str = Form(""),
+    memo: str = Form(""),
+    event_type: str = Form("その他")
+):
+    start_datetime = f"{start_date} {start_time}"
+    end_datetime = f"{end_date} {end_time}"
+    cursor.execute(
+        """
+        INSERT INTO events (
+            company_id,
+            title,
+            start_datetime,
+            end_datetime,
+            location,
+            memo,
+            event_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            company_id,
+            title,
+            start_datetime,
+            end_datetime,
+            location,
+            memo,
+            event_type
+        )
+    )
+
+    conn.commit()
+
+    return RedirectResponse(
+        url=f"/company/{company_id}?user_id={user_id}",
+        status_code=303
+    )
+
+@app.post("/delete_event/{event_id}")
+def delete_company(event_id: int, user_id: int):
+
+    cursor.execute(
+        "DELETE FROM events WHERE id = ?", 
+        (event_id,)
+        )
+    conn.commit()
+
+    return RedirectResponse(
+        url=f"/calendar?user_id={user_id}",
+        status_code=303
+    )
+
+@app.get("/edit_event/{event_id}", response_class=HTMLResponse)
+def edit_event_page(request: Request, event_id: int, user_id: int):
+    cursor.execute("SELECT * FROM events WHERE id = ?", (event_id,))
+    event = cursor.fetchone()
+
+    if not event:
+        return RedirectResponse(
+            url=f"/calendar?user_id={user_id}",
+            status_code=303
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="edit_event.html",
+        context={
+            "event": event,
+            "user_id": user_id
+        }
+    )
+
+@app.post("/edit_event/{event_id}")
+def edit_event(
+    event_id: int,
+    user_id: int,
+    title: str = Form(...),
+    start_datetime: str = Form(...),
+    end_datetime: str = Form(...),
+    location: str = Form(""),
+    memo: str = Form("")
+):
+    cursor.execute("""
+        UPDATE events
+        SET title = ?,
+            start_datetime = ?,
+            end_datetime = ?,
+            location = ?,
+            memo = ?
+        WHERE id = ?
+    """, (
+        title,
+        start_datetime,
+        end_datetime,
+        location,
+        memo,
+        event_id
+    ))
+
+    conn.commit()
+
+    return RedirectResponse(
+        url=f"/calendar?user_id={user_id}",
+        status_code=303
+    )
 @app.get("/edit/{id}")
 def edit_company(id: int, request: Request, user_id: int):
 
@@ -220,6 +415,62 @@ def edit_company(id: int, request: Request, user_id: int):
         name="edit.html",
         context={"company": company,
         "user_id": user_id}
+    )
+
+@app.get("/calendar", response_class=HTMLResponse)
+def calendar_page(
+    request: Request,
+    user_id: int,
+    year: int = None,
+    month: int = None
+):
+    now = datetime.now()
+
+    if year is None:
+       year = now.year
+    if month is None:
+       month = now.month
+
+    prev_month = month - 1
+    prev_year = year
+
+    if prev_month == 0:
+       prev_month = 12
+       prev_year = year - 1
+
+    next_month = month + 1
+    next_year = year
+
+    if next_month == 13:
+        next_month = 1
+        next_year = year + 1
+
+    cursor.execute("""
+        SELECT events.*, companies.company_name
+        FROM events
+        JOIN companies ON events.company_id = companies.id
+        WHERE companies.user_id = ?
+        ORDER BY events.start_datetime ASC
+   """, (user_id,))
+
+    events = cursor.fetchall()
+
+    cal = calendar.monthcalendar(year, month)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="calendar.html",
+        context={
+            "calendar_days": cal,
+            "events": events,
+            "year": year,
+            "month": month,
+            "prev_year": prev_year,
+            "prev_month": prev_month,
+            "next_year": next_year,
+            "next_month": next_month,
+            "user_id": user_id
+            }
     )
 
 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>イベント編集</title>
+</head>
+<body>
+
+<h1>イベント編集</h1>
+
+<form action="/edit_event/{{ event[0] }}?user_id={{ user_id }}" method="post">
+
+    <p>イベント名</p>
+    <input type="text" name="title" value="{{ event[2] }}">
+
+    <p>開始日時</p>
+    <input type="text" name="start_datetime" value="{{ event[3] }}">
+
+    <p>終了日時</p>
+    <input type="text" name="end_datetime" value="{{ event[4] }}">
+
+    <p>場所</p>
+    <input type="text" name="location" value="{{ event[5] }}">
+
+    <p>メモ</p>
+    <textarea name="memo">{{ event[6] }}</textarea>
+
+    <br><br>
+    <button type="submit">保存</button>
+
+</form>
+
+<a href="/calendar?user_id={{ user_id }}">カレンダーに戻る</a>
+
+</body>
+</html>

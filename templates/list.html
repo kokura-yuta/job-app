@@ -86,6 +86,10 @@
         <br>
     </form>
     </div>
+
+    <a href="/calendar?user_id={{ user_id }}">
+        <button type="button">カレンダー</button>
+    </a>
     <a href="/?user_id={{ user_id }}">
         <button type="button">+ 企業を登録する</button>
     </a>
@@ -94,7 +98,11 @@
     {% for company in companies %}
     <div class="company-card">
        <hr>
-       <h2>企業名: {{ company.company_name }}</h2>
+       <h2>
+           <a href="/company/{{ company.id }}?user_id={{ user_id }}" style="display:inline-block; color:blue; text-decoration: underline; position:relative; z-index:9999;">
+            企業名:{{ company.company_name }}
+           </a>
+        </h2>
        <p>
           マイページURL:
           <a href="{{ company.mypage_url }}" target="_blank">
@@ -107,8 +115,6 @@
        </p>
        <p>パスワード: {{ company.password }}</p>
        <p>ES: {{ company.es_text }}</p>
-       <p>締め切り: {{ company.deadline }}</p>
-       <p>開催日: {{ company.event_date }}</p>
        <p>ジャンル: {{ company.genre }}</p>
        <p>志望度: {{ company.priority }}</p>
        <p>
@@ -133,7 +139,7 @@
            <button type="button" class="edit-btn">編集</button> 
        </a>
 
-       <form action="/delete/{{ company.id }}" method="post">
+       <form action="/delete/{{ company.id }}?user_id={{ user_id }}" method="post">
            <button type="submit" class="delete-btn">削除</button>
        </form>
     </div>

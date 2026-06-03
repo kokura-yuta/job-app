@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>会社詳細</title>
+</head>
+<body>
+
+<h1>{{ company.company_name }}</h1>
+
+<p>マイページURL: {{ company.mypage_url }}</p>
+<p>ログインID: {{ company.login_id }}</p>
+<p>結果: {{ company.result }}</p>
+<p>メモ: {{ company.memo }}</p>
+<p>パスワード: {{ company.password }}</p>
+<p>ES内容: {{ company.es_text }}</p>
+<p>ジャンル: {{ company.genre }}</p>
+<p>優先度: {{ company.priority }}</p>
+
+<hr>
+
+<h2>イベント</h2>
+
+{% if events %}
+     {% for event in events %}
+        <div>
+            <h3>{{ event[2] }}</h3>
+            <p>開催: {{ event[3] }}</p>
+            <p>終了: {{ event[4] }}</p>
+            <p>場所: {{ event[5] }}</p>
+            <p>メモ: {{ event[6] }}</p>
+             <a href="/edit_event/{{ event[0 ]}}?user_id={{ user_id }}">
+                 <button>編集</button>
+             </a>
+             <form action="/delete_event/{{ event[0] }}?user_id={{ user_id }}" method="post">
+                 <button type="submit">削除</button>
+             </form>
+
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>まだイベントはありません</p>
+{% endif %}
+<h3>イベント追加</h3>
+
+<form action="/add_event/{{ company.id }}?user_id={{ user_id }}" method="post">
+    <p>イベント種類</p>
+    <select name="event_type">
+         <option value="ES締切">ES締切</option>
+         <option value="Webテスト締切">Webテスト締切</option>
+         <option value="説明会">説明会</option>
+         <option value="一次面接">一次面接</option>
+         <option value="二次面接">二次面接</option>
+         <option value="最終面接">最終面接</option>
+         <option value="インターン">インターン</option>
+         <option value="オープンカンパニー">オープンカンパニー</option>
+         <option value="その他">その他</option>
+    </select>
+    <p>開催日</p>
+    <input type="date" name="start_date">
+
+    <p>開催時間</p>
+    <input type="text" name="start_time">
+
+
+    <p>終了日時</p>
+    <input type="date" name="end_date" >
+
+    <p>終了時間</p>
+    <input type="text" name="end_time">
+
+
+    <p>場所</p>
+    <input type="text" name="location">
+
+    <p>メモ</p>
+    <textarea name="memo"></textarea>
+
+   
+    <br><br>
+
+    <button type="submit">イベント追加</button>
+
+</form>
+
+<a href="/list?user_id={{ user_id }}">
+    一覧へ戻る
+</a>
+
+</body>
+</html>

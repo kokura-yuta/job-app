@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>カレンダー</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            width: 14%;
+            height: 120px;
+            vertical-align: top;
+            padding: 5px;
+        }
+
+        .event {
+            background-color: #5dade2;
+            color: white;
+            margin-top: 5px;
+            padding: 3px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<a href="/calendar?user_id={{ user_id }}&year={{ prev_year }}&month={{ prev_month }}">
+    ←前月
+</a>
+<h1>{{ year }}年{{ month }}月</h1>
+<a href="/calendar?user_id={{ user_id }}&year={{ next_year }}&month={{ next_month }}">
+    次月→
+</a>
+
+<a href="/list?user_id={{ user_id }}">一覧に戻る</a>
+
+<table>
+    <tr>
+        <th>月</th>
+        <th>火</th>
+        <th>水</th>
+        <th>木</th>
+        <th>金</th>
+        <th>土</th>
+        <th>日</th>
+    </tr>
+
+    {% for week in calendar_days %}
+    <tr>
+        {% for day in week %}
+        <td>
+            {% if day != 0 %}
+                <strong>{{ day }}</strong>
+
+                {% for event in events %}
+
+                    {% set event_date = event[3].split(" ")[0] %}  
+                    
+                    {% set event_year = event_date.split("-")[0]|int %}
+                    {% set event_month = event_date.split("-")[1]|int %}
+                    {% set event_day = event_date.split("-")[2]|int %}
+
+                    {% if event_year == year and event_month == month and event_day == day %}
+                        <div class="event">
+                             {{ event[8] }}：{{ event[2] }}
+                        </div>
+                   {% endif %}
+
+                {% endfor %}
+
+            {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
