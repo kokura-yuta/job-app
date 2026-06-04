@@ -14,7 +14,7 @@ def home():
         status_code=303
     )
 
-@app.get("/add_page", responce_class=HTMLResponse)
+@app.get("/add_page", response_class=HTMLResponse)
 def add_page(request: Request, user_id: int):
     return templates.TemplateResponse(
         request=request,
