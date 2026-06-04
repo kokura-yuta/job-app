@@ -13,6 +13,14 @@ def home():
         url="/login",
         status_code=303
     )
+
+@app.get("/add_page", responce_class=HTMLResponse)
+def add_page(request: Request, user_id: int):
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={"user_id": user_id}
+    )
 companies = []
 
 conn = sqlite3.connect("job_app.db", check_same_thread=False)
@@ -81,13 +89,7 @@ except sqlite3.OperationalError:
 conn.commit()
 templates = Jinja2Templates(directory="templates")
 
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request, user_id: int):
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={"user_id": user_id}
-    )
+
 
 @app.post("/add")
 def add_company(
