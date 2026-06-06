@@ -3,9 +3,71 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
+    <style>
+    .body {
+        font-family: Arial, sans-serif;
+        background: #f5f7fa;
+        margin: 0;
+        padding: 16px;
+    }
+
+    .detail-box {
+        max-width: 800px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    button {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    button:hover {
+    opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+
+        .detail-box {
+            padding: 15px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        button {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+}
+</style>
     <title>会社詳細</title>
 </head>
 <body>
+
+<div class="detail-box">
 
 <h1>{{ company.company_name }}</h1>
 
@@ -88,6 +150,6 @@
 <a href="/list?user_id={{ user_id }}">
     一覧へ戻る
 </a>
-
+</div>
 </body>
 </html>
