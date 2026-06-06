@@ -501,7 +501,9 @@ def update_company(
     priority: str = Form(""),
     user_id: int = Form("")
 ):
-    cursor.execute("""
+    local_conn = sqlite3.connect("job_app.db", timeout=30, check_same_thread=False)
+    local_cursor = local_conn.cursor()
+    local_cursor.execute("""
     UPDATE companies
     SET
         company_name = ?,
@@ -532,7 +534,8 @@ def update_company(
         user_id
     ))
 
-    conn.commit()
+    local_conn.commit()
+    local_conn.close()
 
     return RedirectResponse(
         url=f"/list?user_id={user_id}",
