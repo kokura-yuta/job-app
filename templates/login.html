@@ -1,25 +1,79 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>ユーザー登録</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ログイン</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .login-box {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: #56af4c;
+            color: white;
+            cursor: pointer;
+        }
+
+    </style>
+
 </head>
+
 <body>
 
-<h1>ログイン</h1>
+    <div class="login-box">
 
-<form action="/login" method="post">
-    <p>ユーザー名</p>
-    <input type="text" name="username">
+        <h1>ログイン</h1>
 
-    <p>パスワード</p>
-    <input type="password" name="password">
+        <form action="/login" method="post">
 
-    <br><br>
+            <p>ユーザー名</p>
+            <input type="text" name="username">
 
-    <button type="submit">ログイン</button>
-</form>
-<a href="/register">新規登録はこちら</a>
+            <p>パスワード</p>
+            <input type="password" name="password">
 
+            <button type="submit">ログイン</button>
+
+        </form>
+
+        <br>
+
+        <a href="/register">新規登録はこちら</a>
+
+    </div>
 
 </body>
+
 </html>
