@@ -3,6 +3,29 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>企業情報編集</title>
+    <style>
+    body {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    textarea {
+        height: 120px;
+    }
+
+    button {
+    padding: 10px 20px;
+    }
+    </style>
 </head>
 <body>
 
@@ -29,9 +52,6 @@
     <p>締切</p>
     <input type="date" name="deadline" value="{{ company.deadline }}">
 
-    <p>開催日</p>
-    
-    <input type="date" name="event_date" value="{{ company.event_date }}">
     <p>ジャンル</p>
 <select name="genre">
     <option value="エンジニア">エンジニア</option>

@@ -1,88 +1,129 @@
 <!DOCTYPE html>
-<html> 
+<html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>就活管理アプリ</title>
+
+    <title>企業登録</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 16px;
+            margin: 0;
+        }
+
+        .form-box {
+            max-width: 480px;
+            margin: 20px auto;
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            font-size: 28px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 16px;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background: #56af4c;
+            color: white;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>就活管理アプリ</h1>
 
-<form action="/add" method="post">
-    <input type="hidden" name="user_id" value="{{ user_id }}">
-    <p>企業名</p>
-    <input type="text" name="company_name">
+    <div class="form-box">
 
-    <p>マイページURL</p>
-    <input type="text" name="mypage_url">
+        <h1>就活管理アプリ</h1>
 
-    <p>ID</p>
-    <input type="text" name="login_id">
+        <form action="/add" method="post">
 
-    <p>パスワード</p>
-    <input type="text" name="password">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
 
-    <p>ES</p>
-    <textarea name="es_text" rows="10" cols="60"></textarea>
-    
-    <p>締め切り</p>
-    <input type="date" name="deadline">
+            <p>企業名</p>
+            <input type="text" name="company_name">
 
-    <p>開催日</p>
-    <input type="date" name="event_date">
+            <p>マイページURL</p>
+            <input type="text" name="mypage_url">
 
+            <p>ID</p>
+            <input type="text" name="login_id">
 
-    <p>ジャンル</p>
-    <select name="genre">
-    <option value="エンジニア">エンジニア</option>
-    <option value="AI・データサイエンス">AI・データサイエンス</option>
-    <option value="ITコンサル">ITコンサル</option>
-    <option value="コンサル">コンサル</option>
-    <option value="マーケティング">マーケティング</option>
-    <option value="営業">営業</option>
-    <option value="企画">企画</option>
-    <option value="人事">人事</option>
-    <option value="金融">金融</option>
-    <option value="商社">商社</option>
-    <option value="メーカー">メーカー</option>
-    <option value="広告・PR">広告・PR</option>
-    <option value="不動産">不動産</option>
-    <option value="公務員">公務員</option>
-    <option value="その他">その他</option>
-    </select>
+            <p>パスワード</p>
+            <input type="text" name="password">
 
-    <p>志望度</p>
-    <select name="priority">
-    <option value="高">高</option>
-    <option value="中">中</option>
-    <option value="低">低</option>
-    <option value="未設定">未設定</option>
-    </select>
+            <p>ES</p>
+            <textarea name="es_text"></textarea>
 
-     <p>選考状況</p>
-    <select name="result">
-    <option value="未応募">未応募</option>
-    <option value="ES提出済み">ES提出済み</option>
-    <option value="一次選考">一次選考</option>
-    <option value="二次選考">二次選考</option>
-    <option value="三次選考">三次選考</option>
-    <option value="内々定">内々定</option>
-    <option value="内定">内定</option>
-    <option value="不合格">不合格</option>
-    </select>
-    <p>メモ</p>
-    <textarea name="memo" rows="5" cols="60"></textarea>
+            <p>締切</p>
+            <input type="date" name="deadline">
 
-    <br><br>
+            <p>ジャンル</p>
+            <select name="genre">
+                <option value="エンジニア">エンジニア</option>
+                <option value="SIer">SIer</option>
+                <option value="コンサル">コンサル</option>
+                <option value="営業">営業</option>
+                <option value="マーケティング">マーケティング</option>
+                <option value="その他">その他</option>
+            </select>
 
+            <p>志望度</p>
+            <select name="priority">
+                <option value="高">高</option>
+                <option value="中">中</option>
+                <option value="低">低</option>
+            </select>
 
-    <button type="submit">登録</button>
-</form>
+            <p>選考状況</p>
+            <select name="result">
+                <option value="未応募">未応募</option>
+                <option value="応募済み">応募済み</option>
+                <option value="一次面接">一次面接</option>
+                <option value="二次面接">二次面接</option>
+                <option value="最終面接">最終面接</option>
+                <option value="内定">内定</option>
+                <option value="不合格">不合格</option>
+            </select>
+
+            <p>メモ</p>
+            <textarea name="memo"></textarea>
+
+            <button type="submit">登録</button>
+
+        </form>
+
+    </div>
 
 </body>
+
 </html>
-
-    
-
-
-
-</body>
