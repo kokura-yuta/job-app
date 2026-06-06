@@ -62,7 +62,7 @@
         margin-bottom: 20px;
     }
 
-    .search-box{
+    .search-box input{
         padding: 10px;
         width: 250px;
         border-radius: 8px;
@@ -73,31 +73,7 @@
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
-@media (max-width: 768px) {
 
-    body {
-        margin: 10px;
-    }
-
-    .company-card {
-        max-width: 100%;
-        padding: 15px;
-    }
-
-    .action-buttons {
-        flex-direction: colum;
-    }
-
-    button {
-        flex-direction: column;
-    }
-
-    button {
-        width: 100%;
-        margin-bottom: 5px;
-
-    }
-}
 @media (max-width: 768px) {
 
     body {
@@ -135,7 +111,7 @@
         <button type="button">ログアウト</button>
     </a>
     <h1>登録企業一覧</h1>
-    <div action="search-box">
+    <div class="search-box">
     <form action="/list" method="get">
         <input type="hidden" name="user_id" value="{{ user_id }}">
         <input type="text" name="keyword" placeholder="企業名で検索">
@@ -207,7 +183,7 @@
     function copyText(id){
         const text = document.getElementById(id).innerText;
         navigator.clipboard.writeText(text);
-        aleart("コピーしました: " + text);
+        alert("コピーしました: " + text);
         
     }
     </script>
