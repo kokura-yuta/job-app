@@ -107,6 +107,7 @@
     <h1>登録企業一覧</h1>
     <div action="search-box">
     <form action="/list" method="get">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
         <input type="text" name="keyword" placeholder="企業名で検索">
         <button type="submit">検索</button>
         <br>
