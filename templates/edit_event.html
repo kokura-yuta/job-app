@@ -2,9 +2,53 @@
 <html>
 <head>
     <title>イベント編集</title>
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f7fa;
+        margin: 0;
+        padding: 16px;
+    }
+
+    .edit-event-box {
+        max-width: 480px;
+        margin: 20px auto;
+        background: white;
+        padding: 22px;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        margin-bottom: 14px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    textarea {
+        min-height: 100px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: #3498db;
+        color: white;
+        font-size: 16px;
+    }
+</style>
 <body>
 
+<div class="edit-event-box">
 <h1>イベント編集</h1>
 
 <form action="/edit_event/{{ event[0] }}?user_id={{ user_id }}" method="post">
@@ -31,5 +75,6 @@
 
 <a href="/calendar?user_id={{ user_id }}">カレンダーに戻る</a>
 
+</div>
 </body>
 </html>
