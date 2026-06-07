@@ -17,9 +17,11 @@ def home():
 @app.get("/add_page", response_class=HTMLResponse)
 def add_page(request: Request, user_id: int):
     return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={"user_id": user_id}
+        "index.html",
+        {
+            "request":request,
+            "user_id": user_id
+        }
     )
 companies = []
 
@@ -199,11 +201,13 @@ def show_list(request: Request, user_id: int, keyword: str = Query("")):
         grouped_companies[genre].append(company)
 
     return templates.TemplateResponse(
-        request=request,
-        name="list.html",
-        context={"companies": companies,
-                 "grouped_companies": grouped_companies,
-                 "user_id": user_id}
+        "list.html",
+        {
+            "request":request,
+            "companies": companies,
+            "grouped_companies": grouped_companies,
+            "user_id": user_id
+        }
 )
 
 @app.get("/company/{company_id}", response_class=HTMLResponse)
@@ -254,9 +258,9 @@ def company_detail(
        "user_id": row[12]
    }
     return templates.TemplateResponse(
-       request=request,
-       name="company_detail.html",
-       context={
+       "company_detail.html",
+       {
+           "request":request,
            "company": company,
            "user_id": user_id,
            "events": event_rows
@@ -346,9 +350,9 @@ def edit_event_page(request: Request, event_id: int, user_id: int):
         )
 
     return templates.TemplateResponse(
-        request=request,
-        name="edit_event.html",
-        context={
+        "edit_event.html",
+        {
+            "request":request,
             "event": event,
             "user_id": user_id
         }
@@ -420,10 +424,11 @@ def edit_company(id: int, request: Request, user_id: int):
     }
 
     return templates.TemplateResponse(
-        request=request,
-        name="edit.html",
-        context={"company": company,
-        "user_id": user_id}
+        "edit.html",
+        {
+            "request":request,
+            "company": company,
+            "user_id": user_id}
     )
 
 @app.get("/calendar", response_class=HTMLResponse)
@@ -467,9 +472,9 @@ def calendar_page(
     cal = calendar.monthcalendar(year, month)
 
     return templates.TemplateResponse(
-        request=request,
-        name="calendar.html",
-        context={
+        "calendar.html",
+        {
+            "request":request,
             "calendar_days": cal,
             "events": events,
             "year": year,
@@ -544,8 +549,8 @@ def update_company(
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
     return templates.TemplateResponse(
-        request=request,
-        name="register.html"
+        "register.html"
+        {"request":request}
     )
 
 @app.post("/register")
@@ -576,7 +581,7 @@ def register_user(
 
 
 @app.get("/login")
-def login_page(request: Request, error: str =""):
+def login_page(request: Request):
     return templates.TemplateResponse(
         "login.html",
         {"request":request}
