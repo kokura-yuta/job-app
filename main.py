@@ -578,6 +578,10 @@ def register_user(
 def home():
     return RedirectResponse(url="/login", satatus_code=303)
 
+@app.get("/login")
+def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
 @app.post("/login")
 def login_user(
     request: Request,
