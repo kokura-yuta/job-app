@@ -574,9 +574,6 @@ def register_user(
         status_code=303
 )
 
-@app.get("/")
-def home():
-    return RedirectResponse(url="/login", satatus_code=303)
 
 @app.get("/login")
 def login_page(request: Request):
@@ -591,7 +588,10 @@ def login_user(
     if username == "" or password == "":
         return templates.TemplateResponse(
             "login.html",
-            {"request": request, "error": "ユーザー名とパスワードを入力してください"}
+            {
+                "request": request,
+                "error": "ユーザー名とパスワードを入力してください"
+            }
             )
     conn = sqlite3.connect("job_app.db")
     cursor = conn.cursor()
