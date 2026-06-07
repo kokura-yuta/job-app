@@ -570,18 +570,18 @@ def register_user(
       return HTMLResponse("このユーザー名はすでに使われています")
 
     return RedirectResponse(
-        url="/login",
+        url="/login?error=ユーザー名とパスワードを入力してください",
         status_code=303
 )
 
 
 @app.get("/login")
-def login_page(request: Request):
+def login_page(request: Request, error: str =""):
     return templates.TemplateResponse(
-        request=request,
-        name="login.html",
-        context={}
-    )
+        "login.html",
+        {"request":request, "error": error}
+    ) 
+    
 
 @app.post("/login")
 def login_user(
@@ -591,10 +591,12 @@ def login_user(
 ):
     if username == "" or password == "":
         return templates.TemplateResponse(
-            request=request,
-            name="login.html",
-            context={"error": "ユーザー名とパスワードを入力してください"}
-            )
+            "login.html",
+            {
+                "request":request,
+            "error": "ユーザー名とパスワードを入力してください"
+            }
+        )
     conn = sqlite3.connect("job_app.db")
     cursor = conn.cursor()
 
@@ -614,7 +616,7 @@ def login_user(
     else:
         return templates.TemplateResponse(
             "login.html",
-            {"request": request, "error": "ユーザー名またはパスワードが違います"}
+        {"request":request, "error": "ユーザー名またはパスワードが違います"}
         )
 @app.get("/logout")
 def logout():
