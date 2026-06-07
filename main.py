@@ -586,9 +586,9 @@ def login_user(
 ):
     if username == "" or password == "":
         return templates.TemplateResponse(
-            "login.html"
-            {"request": request, "error:ユーザー名とパスワードを入力してください"}
-        )
+            "login.html",
+            {"request": request, "error": "ユーザー名とパスワードを入力してください"}
+            )
     conn = sqlite3.connect("job_app.db")
     cursor = conn.cursor()
 
