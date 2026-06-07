@@ -208,7 +208,7 @@ def show_list(request: Request, user_id: int, keyword: str = Query("")):
             "request":request,
             "companies": companies,
             "grouped_companies": grouped_companies,
-            "user_id": user_id
+            "user_id": user_id,
         }
 )
 
@@ -260,8 +260,9 @@ def company_detail(
        "user_id": row[12]
    }
     return templates.TemplateResponse(
-       "company_detail.html",
-       {
+        request=request,
+        name="company_detail.html",
+        context={
            "request":request,
            "company": company,
            "user_id": user_id,
@@ -352,8 +353,9 @@ def edit_event_page(request: Request, event_id: int, user_id: int):
         )
 
     return templates.TemplateResponse(
-        "edit_event.html",
-        {
+        request=request,
+        name="edit_event.html",
+        context={
             "request":request,
             "event": event,
             "user_id": user_id
@@ -426,8 +428,9 @@ def edit_company(id: int, request: Request, user_id: int):
     }
 
     return templates.TemplateResponse(
-        "edit.html",
-        {
+        request=request,
+        name="edit.html",
+        context={
             "request":request,
             "company": company,
             "user_id": user_id}
@@ -474,8 +477,9 @@ def calendar_page(
     cal = calendar.monthcalendar(year, month)
 
     return templates.TemplateResponse(
-        "calendar.html",
-        {
+         request=request,
+        name="calendar.html",
+        context={
             "request":request,
             "calendar_days": cal,
             "events": events,
