@@ -59,7 +59,22 @@
             <input type="text" name="username">
 
             <p>パスワード</p>
-            <input type="password" name="password">
+            <input type="password" id="password" name="password">
+            <label>
+                <input type="checkbox" onclick="togglePassword()">
+                パスワードを表示
+            </label>
+
+            <script>
+            function togglePassword() {
+                var passwordField = document.getElementById("password");
+                if (passwordField.type === "password") {
+                   passwordField.type = "text";
+                } else {
+                    passwordField.type = "password";
+                }
+            }
+            </script>
 
             <button type="submit">登録</button>
 

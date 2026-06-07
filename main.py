@@ -581,8 +581,8 @@ def home():
 @app.post("/login")
 def login_user(
     request: Request,
-    username: str = Form(""),
-    password: str = Form("")
+    username: str = Form(...),
+    password: str = Form(...)
 ):
     if username == "" or password == "":
         return templates.TemplateResponse(
