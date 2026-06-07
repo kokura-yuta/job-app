@@ -578,8 +578,8 @@ def register_user(
 @app.get("/login")
 def login_page(request: Request, error: str =""):
     return templates.TemplateResponse(
-        "login.html",
-        {"request":request, "error": error}
+        name="login.html",
+        context={"request":request, "error": error}
     ) 
     
 
