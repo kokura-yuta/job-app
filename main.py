@@ -382,7 +382,7 @@ def edit_event(
     ))
 
     conn.commit()
-
+    conn.close()
     return RedirectResponse(
         url=f"/calendar?user_id={user_id}",
         status_code=303
