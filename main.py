@@ -577,7 +577,11 @@ def register_user(
 
 @app.get("/login")
 def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+        context={}
+    )
 
 @app.post("/login")
 def login_user(
@@ -587,11 +591,9 @@ def login_user(
 ):
     if username == "" or password == "":
         return templates.TemplateResponse(
-            "login.html",
-            {
-                "request": request,
-                "error": "ユーザー名とパスワードを入力してください"
-            }
+            request=request,
+            name="login.html",
+            context={"error": "ユーザー名とパスワードを入力してください"}
             )
     conn = sqlite3.connect("job_app.db")
     cursor = conn.cursor()
