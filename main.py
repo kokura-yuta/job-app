@@ -17,8 +17,9 @@ def home():
 @app.get("/add_page", response_class=HTMLResponse)
 def add_page(request: Request, user_id: int):
     return templates.TemplateResponse(
-        "index.html",
-        {
+        request=request,
+        name="index.html",
+        context={
             "request":request,
             "user_id": user_id
         }
@@ -201,8 +202,9 @@ def show_list(request: Request, user_id: int, keyword: str = Query("")):
         grouped_companies[genre].append(company)
 
     return templates.TemplateResponse(
-        "list.html",
-        {
+         request=request,
+         name="list.html",
+         context={
             "request":request,
             "companies": companies,
             "grouped_companies": grouped_companies,
@@ -549,8 +551,9 @@ def update_company(
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
     return templates.TemplateResponse(
-        "register.html",
-        {"request":request}
+        request=request,
+        name="register.html",
+        context={"request":request}
     )
 
 @app.post("/register")
@@ -583,8 +586,9 @@ def register_user(
 @app.get("/login")
 def login_page(request: Request):
     return templates.TemplateResponse(
-        "login.html",
-        {"request":request}
+         request=request,
+        name="login.html",
+        context={"request":request}
     ) 
     
 
@@ -596,10 +600,11 @@ def login_user(
 ):
     if username == "" or password == "":
         return templates.TemplateResponse(
-            "login.html",
-            {
+            request=request,
+            name="login.html",
+            context={
                 "request":request,
-            "error": "ユーザー名とパスワードを入力してください"
+            "error": "ユーザー名とパスワードを入力してください",
             }
         )
     conn = sqlite3.connect("job_app.db")
@@ -620,8 +625,9 @@ def login_user(
         )
     else:
         return templates.TemplateResponse(
-            "login.html",
-        {"request":request, "error": "ユーザー名またはパスワードが違います"}
+            request=request,
+            name="login.html",
+            context={"request":request, "error": "ユーザー名またはパスワードが違います"}
         )
 @app.get("/logout")
 def logout():
