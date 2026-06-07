@@ -549,7 +549,7 @@ def update_company(
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
     return templates.TemplateResponse(
-        "register.html"
+        "register.html",
         {"request":request}
     )
 
