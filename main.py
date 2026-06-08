@@ -463,6 +463,8 @@ def calendar_page(
     if next_month == 13:
         next_month = 1
         next_year = year + 1
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
 
     cursor.execute("""
         SELECT events.*, companies.company_name
@@ -473,7 +475,7 @@ def calendar_page(
    """, (user_id,))
 
     events = cursor.fetchall()
-
+    conn.close()
     cal = calendar.monthcalendar(year, month)
 
     return templates.TemplateResponse(
