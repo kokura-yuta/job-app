@@ -151,6 +151,9 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     )
 @app.get("/list", response_class=HTMLResponse)
 def show_list(request: Request, user_id: int, keyword: str = Query("")):
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+
     if keyword:
         cursor.execute(
             """
@@ -171,7 +174,7 @@ def show_list(request: Request, user_id: int, keyword: str = Query("")):
             (user_id,)
         )
     rows = cursor.fetchall()
-    print(rows)
+    conn.close()
 
     companies = []
     for row in rows:
