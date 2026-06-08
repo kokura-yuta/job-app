@@ -276,8 +276,12 @@ def company_detail(
 
 @app.post("/delete/{id}")
 def delete_company(id: int, user_id: int):
-    cursor.execute("DELETE FROM companies WHERE id = ?", (id,))
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM companies WHERE id = ? AND user_id = ?", (id, user_id))
+    
     conn.commit()
+    conn.close()
 
     return RedirectResponse(
         url=f"/list?user_id={user_id}",
