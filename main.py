@@ -389,6 +389,9 @@ def edit_event(
     location: str = Form(""),
     memo: str = Form("")
 ):
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+
     cursor.execute("""
         UPDATE events
         SET title = ?,
@@ -414,13 +417,19 @@ def edit_event(
     )
 @app.get("/edit/{id}")
 def edit_company(id: int, request: Request, user_id: int):
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM companies WHERE id = ?", 
-        (id,)
+        """ 
+        SELECT * FROM companies WHERE id = ?
+        AND user_id = ?
+        """, 
+        (id, user_id)
     )
     row = cursor.fetchone()
-    
+    conn.close()
+
     if row is None:
         return RedirectResponse(
             url=f"/list?user_id={user_id}",
@@ -443,7 +452,7 @@ def edit_company(id: int, request: Request, user_id: int):
         "user_id":row[12]
 
     }
-
+    
     return templates.TemplateResponse(
         request=request,
         name="edit.html",
