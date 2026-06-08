@@ -222,6 +222,9 @@ def company_detail(
     company_id: int, 
     user_id: int
 ):
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+
     cursor.execute(
         """
         SELECT * FROM companies
@@ -234,6 +237,7 @@ def company_detail(
     row = cursor.fetchone()
 
     if not row:
+        conn.close()
         return HTMLResponse("企業が見つかりません, status_code=404")
 
     cursor.execute(
@@ -246,6 +250,7 @@ def company_detail(
 )
 
     event_rows = cursor.fetchall()
+    conn.close()
 
 
     company = {
