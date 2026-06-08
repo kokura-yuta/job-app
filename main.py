@@ -190,7 +190,8 @@ def show_list(request: Request, user_id: int, keyword: str = Query("")):
             "result":row[8],
             "memo":row[9],
             "genre":row[10],
-            "priority":row[11]
+            "priority":row[11],
+            "user_id":row[12]
 
         }
 
