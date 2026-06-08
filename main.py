@@ -342,13 +342,14 @@ def add_event(
 
 @app.post("/delete_event/{event_id}")
 def delete_company(event_id: int, user_id: int):
-
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
     cursor.execute(
         "DELETE FROM events WHERE id = ?", 
         (event_id,)
         )
     conn.commit()
-
+    conn.close()
     return RedirectResponse(
         url=f"/calendar?user_id={user_id}",
         status_code=303
@@ -356,9 +357,12 @@ def delete_company(event_id: int, user_id: int):
 
 @app.get("/edit_event/{event_id}", response_class=HTMLResponse)
 def edit_event_page(request: Request, event_id: int, user_id: int):
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+
     cursor.execute("SELECT * FROM events WHERE id = ?", (event_id,))
     event = cursor.fetchone()
-
+    conn.close()
     if not event:
         return RedirectResponse(
             url=f"/calendar?user_id={user_id}",
