@@ -525,6 +525,7 @@ def calendar_page(
 @app.post("/update/{id}")
 def update_company(
     id: int,
+    user_id: int,
     company_name: str = Form(""),
     mypage_url: str = Form(""),
     login_id: str = Form(""),
@@ -536,7 +537,7 @@ def update_company(
     memo: str = Form(""),
     genre: str = Form(""),
     priority: str = Form(""),
-    user_id: int = Form(...)
+   
 ):
     local_conn = sqlite3.connect("job_app.db", timeout=30, check_same_thread=False)
     local_cursor = local_conn.cursor()
