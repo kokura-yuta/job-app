@@ -383,9 +383,9 @@ def edit_event_page(request: Request, event_id: int, user_id: int):
 def edit_event(
     event_id: int,
     user_id: int,
-    title: str = Form(...),
-    start_datetime: str = Form(...),
-    end_datetime: str = Form(...),
+    title: str = Form(""),
+    start_datetime: str = Form(""),
+    end_datetime: str = Form(""),
     location: str = Form(""),
     memo: str = Form("")
 ):
