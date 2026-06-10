@@ -536,7 +536,7 @@ def update_company(
     memo: str = Form(""),
     genre: str = Form(""),
     priority: str = Form(""),
-    user_id: int = Form("")
+    user_id: int = Form(...)
 ):
     local_conn = sqlite3.connect("job_app.db", timeout=30, check_same_thread=False)
     local_cursor = local_conn.cursor()

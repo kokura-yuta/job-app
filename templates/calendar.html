@@ -84,14 +84,12 @@
                 <strong>{{ day }}</strong>
 
                 {% for event in events %}
-                  {% if event[3] %}
-                    {% set event_date = event[3].split(" ")[0] %}  
-                    
-                    {% set event_year = event_date.split("-")[0]|int %}
-                    {% set event_month = event_date.split("-")[1]|int %}
-                    {% set event_day = event_date.split("-")[2]|int %}
+                  {% if event[3] and event[4] %}
+                    {% set current_date = year ~ "-" ~ "%02d"|format(month) ~ "-" ~ "%02d"|format(day) %}
+                    {% set start_date = event[3].split(" ")[0] %}
+                    {% set end_date = event[4].split(" ")[0] %}
 
-                    {% if event_year == year and event_month == month and event_day == day %}
+                    {% if current_date >= start_date and current_date <= end_date %}
                         <div class="event">
                              {{ event[8] }}：{{ event[2] }}
                         </div>
