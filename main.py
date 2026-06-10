@@ -443,13 +443,11 @@ def edit_company(id: int, request: Request, user_id: int):
         "login_id":row[3],
         "password":row[4],
         "es_text":row[5],
-        "deadline":row[6],
-        "event_date":row[7],
-        "result":row[8],
-        "memo":row[9],
-        "genre":row[10],
-        "priority":row[11],
-        "user_id":row[12]
+        "result":row[6],
+        "memo":row[7],
+        "genre":row[8],
+        "priority":row[9],
+        "user_id":row[10]
 
     }
     
