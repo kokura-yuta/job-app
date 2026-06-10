@@ -84,7 +84,7 @@
                 <strong>{{ day }}</strong>
 
                 {% for event in events %}
-
+                {% if event[3] %}
                     {% set event_date = event[3].split(" ")[0] %}  
                     
                     {% set event_year = event_date.split("-")[0]|int %}
