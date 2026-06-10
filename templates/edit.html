@@ -30,7 +30,7 @@
 <body>
 
 <h1>企業情報編集</h1>
-<form action="/update/{{ company.id }}?user_id={{ company.user_id }}" method="post">
+<form action="/update/{{ company.id }}?user_id={{ user_id }}" method="post">
    
     <input type="hidden" name="user_id" value="{{ company.user_id }}">
     <p>企業名</p>
