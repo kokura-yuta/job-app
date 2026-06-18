@@ -27,14 +27,14 @@
         }
 
         .event {
-    background-color: #5dade2;
-    color: white;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 8px;
-    font-size: 11px;
-    line-height: 1.3;
-}
+            background-color: #5dade2;
+            color: white;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 8px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
 
         .event-time {
             font-size: 10px;
@@ -48,6 +48,13 @@
 
         .event-company {
             font-size: 10px;
+        }
+
+        .more-events {
+            margin-top: 3px;
+            font-size: 11px;
+            color: #555;
+            font-weight: bold;
         }
     @media (max-width: 768px){
 
@@ -97,31 +104,31 @@
         <td>
             {% if day != 0 %}
                 <strong>{{ day }}</strong>
+                    {% set ns = namespace(count=0, total=0) %}
 
-                {% for event in events %}
-                  {% if event[3] and event[4] %}
-                    {% set current_date = year ~ "-" ~ "%02d"|format(month) ~ "-" ~ "%02d"|format(day) %}
-                    {% set start_date = event[3].split(" ")[0] %}
-                    {% set end_date = event[4].split(" ")[0] %}
+                    {% for event in events %}
+                        {% if event[3] and event[4] %}
+                            {% set current_date = year ~ "-" ~ "%02d"|format(month) ~ "-" ~ "%02d"|format(day) %}
+                            {% set start_date = event[3].split(" ")[0] %}
+                            {% set end_date = event[4].split(" ")[0] %}
 
-                    {% if current_date >= start_date and current_date <= end_date %}
-                        <div class="event">
-                            <div class="event-time">
-                                {{ event[3][11:16] }}
-                            </div>
-                            <div class="event-title">
-                                {{ event[2] }}
-                            </div>
-                            <div class="event-company">
-                                {{ event[8] }}
-                            </div>
+                            {% if current_date >= start_date and current_date <= end_date %}
+                                {% set ns.total = ns.total + 1%}
+
+                                {% if ns.count < 4 %}
+                                    <div class="event">
+                                        {{ event[8] }}
+                                    </div>
+                                    {% set ns.count = ns.count + 1 %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if ns.total > 4 %}
+                        <div class="more-events">
+                            +{{ ns.total - 4 }}件
                         </div>
                     {% endif %}
-
-
-                  {% endif %}
-                {% endfor %}
-
             {% endif %}
         </td>
         {% endfor %}
