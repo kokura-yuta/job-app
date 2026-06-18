@@ -407,9 +407,7 @@ def edit_event(
         WHERE id = ?
     """, (
         title,
-        start_date,
         start_datetime,
-        end_date,
         end_datetime,
         location,
         memo,
