@@ -53,14 +53,35 @@
 
 <form action="/edit_event/{{ event[0] }}?user_id={{ user_id }}" method="post">
 
-    <p>イベント名</p>
-    <input type="text" name="title" value="{{ event[2] }}">
+    <p>イベント種類</p>
+    <select name="title">
+        <option value="ES締切" {% if event[2] == "ES締切" %}selected{% endif %}>ES締切</option>
+        <option value="Webテスト締切" {% if event[2] == "Webテスト締切" %}selected{% endif %}>Webテスト締切</option>
+        <option value="説明会" {% if event[2] == "説明会" %}selected{% endif %}>説明会</option>
+        <option value="一次面接" {% if event[2] == "一次面接" %}selected{% endif %}>一次面接</option>
+        <option value="二次面接" {% if event[2] == "二次面接" %}selected{% endif %}>二次面接</option>
+        <option value="最終面接" {% if event[2] == "最終面接" %}selected{% endif %}>最終面接</option>
+        <option value="インターン" {% if event[2] == "インターン" %}selected{% endif %}>インターン</option>
+        <option value="オープンカンパニー" {% if event[2] == "オープンカンパニー" %}selected{% endif %}>オープンカンパニー</option>
+        <option value="その他" {% if event[2] == "その他" %}selected{% endif %}>その他</option>
+    </select>
 
-    <p>開始日時</p>
-    <input type="text" name="start_datetime" value="{{ event[3] }}">
+
+        
+
+    <p>開催日</p>
+    <input type="date" name="start_date" value="{{ event[3] }}">
+
+    <p>開催時間</p>
+    <input type="time" name="start_datetime">
+
 
     <p>終了日時</p>
-    <input type="text" name="end_datetime" value="{{ event[4] }}">
+    <input type="date" name="end_date" value="{{ event[4] }}">
+
+    <p>終了時間</p>
+    <input type="time" name="end_datetime">
+
 
     <p>場所</p>
     <input type="text" name="location" value="{{ event[5] }}">

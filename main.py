@@ -384,7 +384,9 @@ def edit_event(
     event_id: int,
     user_id: int,
     title: str = Form(""),
+    start_date: str = Form(""),
     start_datetime: str = Form(""),
+    end_date: str = Form(""),
     end_datetime: str = Form(""),
     location: str = Form(""),
     memo: str = Form("")
@@ -395,14 +397,18 @@ def edit_event(
     cursor.execute("""
         UPDATE events
         SET title = ?,
+            start_date = ?,
             start_datetime = ?,
+            end_date = ?,
             end_datetime = ?,
             location = ?,
             memo = ?
         WHERE id = ?
     """, (
         title,
+        start_date,
         start_datetime,
+        end_date,
         end_datetime,
         location,
         memo,
