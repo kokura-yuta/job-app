@@ -70,17 +70,17 @@
         
 
     <p>開催日</p>
-    <input type="date" name="start_date" value="{{ event[3] }}">
+    <input type="date" name="start_date" value="{{ event[3][:10] }}">
 
     <p>開催時間</p>
-    <input type="time" name="start_datetime">
+    <input type="time" name="start_time" value="{{ event[3][11:16] }}">
 
 
     <p>終了日時</p>
-    <input type="date" name="end_date" value="{{ event[4] }}">
+    <input type="date" name="end_date" value="{{ event[4][:10] }}">
 
     <p>終了時間</p>
-    <input type="time" name="end_datetime">
+    <input type="time" name="end_time" value="{{ event[4][11:16] }}">
 
 
     <p>場所</p>

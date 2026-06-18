@@ -385,21 +385,22 @@ def edit_event(
     user_id: int,
     title: str = Form(""),
     start_date: str = Form(""),
-    start_datetime: str = Form(""),
+    start_time: str = Form(""),
     end_date: str = Form(""),
-    end_datetime: str = Form(""),
+    end_time: str = Form(""),
     location: str = Form(""),
     memo: str = Form("")
-):
+):  
+    start_datetime = f"{start_date} {start_time}"
+    end_datetime = f"{end_date} {end_time}"
+
     conn = sqlite3.connect("job_app.db")
     cursor = conn.cursor()
 
     cursor.execute("""
         UPDATE events
         SET title = ?,
-            start_date = ?,
             start_datetime = ?,
-            end_date = ?,
             end_datetime = ?,
             location = ?,
             memo = ?
