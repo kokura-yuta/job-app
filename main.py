@@ -48,9 +48,15 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,
+    email TEXT,
     password TEXT
 )
 """)
+
+try:
+    cursor.execute("ALTER TABLE users ADD COLUMN email TEXT")
+except sqlite3.OperationalError:
+    pass
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS events (
@@ -595,6 +601,7 @@ def register_page(request: Request):
 @app.post("/register")
 def register_user(
     username: str = Form(...),
+    email: str = Form(...),
     password: str = Form(...)
 ):
     conn = sqlite3.connect("job_app.db")
@@ -602,8 +609,8 @@ def register_user(
     try:
         cursor.execute(
         """
-        INSERT INTO users (username, password)
-        VALUES (?,?)
+        INSERT INTO users (username, email, password)
+        VALUES (?,?,?)
         """,
         (username, password)
      )
