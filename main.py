@@ -608,15 +608,6 @@ def register_page(request: Request):
         context={"request":request}
     )
 
-@app.get("/forgot-password")
-def forget_password_page(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="forget_password.html",
-        context={"request": request}
-    )
-
-
 @app.post("/register")
 def register_user(
     username: str = Form(...),
@@ -643,6 +634,76 @@ def register_user(
         url="/login?error=ユーザー名とパスワードを入力してください",
         status_code=303
 )
+
+@app.get("/forgot-password")
+def forget_password_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="forget_password.html",
+        context={"request": request}
+    )
+
+@app.post("/forget-password")
+def forget_password(request: Request, email: str = Form(...)):
+    if email == "":
+        return templates.TemplateResponse(
+            request=request,
+            name="forget_password.html",
+            context={
+                "request": request,
+                "error": "メールアドレスを入力してください"
+            }
+        )
+
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM users WHERE email = ?",
+        (email,)
+    )
+    user = cursor.fetchone()
+    conn.close()
+
+    if user:
+        return templates.TemplateResponse(
+            request=request,
+            name="reset_password.html",
+            context={
+                "request": request,
+                "email": email
+            }
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="forget_password.html",
+        context={
+            "request": request,
+            "error": "このメールアドレスは登録されていません"
+        }
+    )
+@app.post("/reset-password")
+def reset_password(
+    email: str = Form(...),
+    new_password: str = Form(...)
+):
+    conn = sqlite3.connect("job_app.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE users SET password = ? WHERE email = ?",
+        (new_password, email)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        url="/login",
+        status_code=303
+    )
+
 
 
 @app.get("/login")
