@@ -608,6 +608,14 @@ def register_page(request: Request):
         context={"request":request}
     )
 
+@app.get("/forgot-password")
+def forgot_password_page(request: Request):
+    return templates.TemplateResponse(
+        "forgot_password.html",
+        {"request": request}
+    )
+
+
 @app.post("/register")
 def register_user(
     username: str = Form(...),
