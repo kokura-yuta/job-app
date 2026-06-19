@@ -58,6 +58,16 @@ try:
 except sqlite3.OperationalError:
     pass
 
+try:
+    cursor.execute("ALTER TABLE users ADD COLUMN reset_token TEXT")
+except sqlite3.OperationalError:
+    pass
+
+try:
+    cursor.execute("ALTER TABLE users ADD COLUMN reset_token_expire TEXT")
+except sqlite3.OperationalError:
+    pass
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
