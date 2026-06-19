@@ -622,7 +622,7 @@ def register_user(
         INSERT INTO users (username, email, password)
         VALUES (?,?,?)
         """,
-        (username, password)
+        (username, email, password)
      )
 
         conn.commit()
