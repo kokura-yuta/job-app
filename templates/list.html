@@ -50,11 +50,11 @@
     }
 
     .delete-btn{
-        background:#e74c3c;
+        background:#ef4444;
     }
 
     .edit-btn{
-        background:#3498db;
+        background:#3b82f6;
     }
 
     .search-box{
@@ -66,7 +66,7 @@
     }
 
     .search-box input{
-        padding: 14px;
+        padding: 12px;
         width: 100%;
         border-radius: 14px;
         border:1px solid #e5e7eb;
@@ -148,14 +148,13 @@
     <h2>{{ genre }}</h2>
     {% for company in companies %}
     <div class="company-card">
-       <hr>
        <h2>
            <a href="/company/{{ company.id }}?user_id={{ user_id }}" style="display:inline-block; color:blue; text-decoration: underline; position:relative; z-index:9999;">
             {{ company.company_name }}
            </a>
        </h2>
-       <p>💼: {{ company.genre }}</p>
-       <p>⭐️: {{ company.priority }}</p>
+       <p>
+        💼 {{ company.genre }} | ⭐️ {{ company.priority }}</p>
        <p>
        🗒️選考状況: 
        {% if company.result == "内定" or company.result == "内々定" %}
