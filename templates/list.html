@@ -58,15 +58,21 @@
     }
 
     .search-box{
-        text-align:center;
+        background: white;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow:0 8px 25px rgba(0,0,0,0,08);
         margin-bottom: 20px;
     }
 
     .search-box input{
-        padding: 10px;
-        width: 250px;
-        border-radius: 8px;
-        border:1px solid #ccc;
+        padding: 14px;
+        width: 100%;
+        border-radius: 14px;
+        border:1px solid #e5e7eb;
+        box-sizing:border-box;
+        font-size:16px;
+        margin-bottom:12px;
     }
 
     .company-card p{
@@ -85,8 +91,19 @@
     }
 
     .company-card {
-        max-width: 100%;
-        padding: 15px;
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow:0 8px 25px rgba(0,0,0,0,08);
+        margin-bottom: 20px;
+        max-width:800px;
+    }
+
+    .company-card h2 a{
+        color:#1f2937;
+        text-decoration:none;
+        font-size:28px;
+        font-weight:700;
     }
 
     .action-buttons {
@@ -119,13 +136,14 @@
         <br>
     </form>
     </div>
-
+    <div class="top-buttons">
     <a href="/calendar?user_id={{ user_id }}">
         <button type="button">カレンダー</button>
     </a>
     <a href="/add_page?user_id={{ user_id }}">
         <button type="button">+ 企業を登録する</button>
     </a>
+    </div>
     {% for genre, companies in grouped_companies.items() %}
     <h2>{{ genre }}</h2>
     {% for company in companies %}
@@ -133,25 +151,13 @@
        <hr>
        <h2>
            <a href="/company/{{ company.id }}?user_id={{ user_id }}" style="display:inline-block; color:blue; text-decoration: underline; position:relative; z-index:9999;">
-            企業名:{{ company.company_name }}
+            {{ company.company_name }}
            </a>
-        </h2>
+       </h2>
+       <p>💼: {{ company.genre }}</p>
+       <p>⭐️: {{ company.priority }}</p>
        <p>
-          マイページURL:
-          <a href="{{ company.mypage_url }}" target="_blank">
-            {{ company.mypage_url }}    
-          </a>
-        </p>
-       <p>ID: 
-        <span id="login-id-{{ company.id }}">{{ company.login_id }}</span>
-        <button type="button" onclick="copyText('login-id-{{ company.id }}')">コピー</button>
-       </p>
-       <p>パスワード: {{ company.password }}</p>
-       <p>ES: {{ company.es_text }}</p>
-       <p>ジャンル: {{ company.genre }}</p>
-       <p>志望度: {{ company.priority }}</p>
-       <p>
-       選考状況: 
+       🗒️選考状況: 
        {% if company.result == "内定" or company.result == "内々定" %}
        <span style="color: red;">{{company.result}}</span>
        {% elif company.result == "不合格" %}
@@ -165,7 +171,6 @@
            {{ company.result }}
        {% endif %}
        </p> 
-       <p>メモ: {{ company.memo }}</p>
 
     <div class="action-buttons">
        <a href="/edit/{{ company.id }}?user_id={{ user_id }}">
