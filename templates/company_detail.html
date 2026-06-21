@@ -15,6 +15,14 @@
         max-width:800px;
         margin:auto;
     }
+    .company-header-card,
+    .info-card{
+        background:white;
+        border-radius:22px;
+        padding:24px;
+        box-shadow:0 8px 25px rgba(0,0,0,0.08);
+        margin-bottom:20px;
+    }
 
     .back-link{
         color:#56af4c;
@@ -111,7 +119,35 @@
             font-size:32px;
         }
     }
-    
+    .info-card{
+        background:white;
+        border-radius:20px;
+        padding:20px;
+        box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .info-row{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        padding:15px 0;
+        border-bottom:1px solid #eee;
+    }
+
+    .info-row input{
+        flex:1;
+        border:none;
+        background:transparent;
+    }
+
+    .copy-btn{
+        padding:8px 18px;
+        border:1px solid #4CAF50;
+        background:white;
+        color:#4CAF50;
+        border-radius:10px;
+    }
 </style>
     <title>会社詳細</title>
 </head>
@@ -130,8 +166,8 @@
         <div>
             <h1>{{ company.company_name }}</h1>
             <p class="company-meta">
-                💼 {{ company.genre }}　
-                | ⭐ 志望度：{{ company.priority }}　
+                💼 {{ company.genre }}
+                | ⭐ 志望度：{{ company.priority }}
                 | 📝 選考状況：{{ company.result }}
             </p>
         </div>
@@ -143,19 +179,31 @@
 
         <div class="info-row">
             <span>マイページURL</span>
-            <a href="{{ company.mypage_url }}" target="_blank">開く</a>
+            <a href="{{ company.mypage_url }}">開く</a>
         </div>
 
         <div class="info-row">
             <span>ログインID</span>
-            <span id="login_id">{{ company.login_id }}</span>
-            <button type="button" onclick="copyText('login_id')">コピー</button>
+            <input type="text"
+                    value="{{ company.login_id }}"
+                    readonly
+                    id="login_id">
+            <button class="copy-btn"
+                 onclick="copylogin_id()">
+                コピー
+            </button>
         </div>
 
         <div class="info-row">
             <span>パスワード</span>
-            <span id="password">{{ company.password }}</span>
-            <button type="button" onclick="copyText('password')">コピー</button>
+            <input type="text"
+                    value="{{ company.password }}"
+                    readonly
+                    id="password">
+            <button class="copy-btn"
+                    onclick="copyPassword()">
+                    コピー
+            </button>
         </div>
 
         <div class="info-row">
@@ -236,12 +284,19 @@
 </div>
 
 <script>
-function copyText(id){
-    const text = document.getElementById(id).innerText;
+function copyLoginId() {
+    const text =
+        document.getElementById("login_id").value;
+
     navigator.clipboard.writeText(text);
-    alert("コピーしました");
+}
+
+function copyPassword() {
+    const text =
+        document.getElementById("password").value;
+
+    navigator.clipboard.writeText(text);
 }
 </script>
-
 </body>
 </html>
