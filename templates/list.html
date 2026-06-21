@@ -109,16 +109,29 @@
     }
 
     .company-card h2 a{
-        color:#1f2937;
+        color:#111827;
         text-decoration:none;
         font-size:28px;
         font-weight:700;
     }
 
-    button {
-        width: 100%;
-        margin-bottom: 8px;
+    .action-buttons{
+        display:flex;
+        flex-direction: row;
+        gap:10px;
+        margin-top:15px;
     }
+
+    .action-buttons a,
+    .action-buttons form{
+        flex:1;
+    }
+
+    .action-buttons button{
+        width:100%;
+        margin-bottom: 0;
+    }
+    
 
     input[type="text"] {
         width: 100%;
