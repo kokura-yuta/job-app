@@ -3,17 +3,40 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>企業情報編集</title>
-    <style>
+<style>
     body {
+        background: #f5f7fa;
+        font-family: Arial, sans-serif;
         max-width: 800px;
-        margin: auto;
+        margin: 0;
         padding: 20px;
+    }
+    .edit-card{
+        background: white;
+        border-radius: 24px;
+        padding:28px;
+        box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    }
+    h1{
+        text-align: center;
+        font-size: 32px;
+        color:#111827;
+    }
+    p{
+        font-size:18px;
+        font-weight:600;
+        margin-bottom:8px;
     }
 
     input,
     textarea,
     select {
-        width: 100%;
+        width: 90%;
+        padding:14px;
+        border:1px solid #e5e7eb;
+        border-radius: 14px;
+        margin:0 auto 12px auto;
+        display:block;
         box-sizing: border-box;
         margin-bottom: 10px;
     }
@@ -23,12 +46,19 @@
     }
 
     button {
-    padding: 10px 20px;
+        width:100%;
+        background: #56af4c;
+        color:white;
+        border:none;
+        border-radius: 14px;
+        padding:15px;
+        font-size: 18px;
     }
-    </style>
+</style>
 </head>
 <body>
 
+<div class="edit-card">
 <h1>企業情報編集</h1>
 <form action="/update/{{ company.id }}?user_id={{ user_id }}" method="post">
    
@@ -96,6 +126,7 @@
     <button type="submit">保存</button>
 
 </form>
+</div>
 
 </body>
 </html>
