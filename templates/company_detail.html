@@ -119,112 +119,129 @@
 
 <div class="detail-box">
 
-<a class="back-link" href="/list?user_id={{ user_id }}">
-    一覧に戻る
-</a>
+    <a class="back-link" href="/list?user_id={{ user_id }}">← 一覧に戻る</a>
 
-<div class="detail-card">
-
-<h1>{{ company.company_name }}</h1>
-
-<p>マイページURL: 
-<a href="{{ company.mypage_url }}" target="_blank">
-    開く
-</a>
-</p>
-<input
-    type="text"
-    value="{{ company.login_id }}"
-    readonlyid="login_id"
->
-
-<button onclick="copyLoginId()">
-    コピー
-</button>
-<p>メモ: {{ company.memo }}</p>
-<p>パスワード: {{ company.password }}</p>
-<p>ES内容: {{ company.es_text }}</p>
-
-
-</div>
-<hr>
-
-<h2>イベント</h2>
-
-{% if events %}
-     {% for event in events %}
-        <div class="event-card">
-            <h3>{{ event[2] }}</h3>
-            <p>開催: {{ event[3] }}</p>
-            <p>終了: {{ event[4] }}</p>
-            <p>場所: {{ event[5] }}</p>
-            <p>メモ: {{ event[6] }}</p>
-             <a href="/edit_event/{{ event[0 ]}}?user_id={{ user_id }}">
-                 <button>編集</button>
-             </a>
-             <form action="/delete_event/{{ event[0] }}?user_id={{ user_id }}" method="post">
-                 <button type="submit">削除</button>
-             </form>
-
+    <!-- 企業ヘッダー -->
+    <div class="company-header-card">
+        <div class="logo-circle">
+            {{ company.company_name[0] }}
         </div>
-        <hr>
-    {% endfor %}
-{% else %}
-    <p>まだイベントはありません</p>
-{% endif %}
-<h3>イベント追加</h3>
 
-<form action="/add_event/{{ company.id }}?user_id={{ user_id }}" method="post">
-    <p>イベント種類</p>
-    <select name="event_type">
-         <option value="ES締切">ES締切</option>
-         <option value="Webテスト締切">Webテスト締切</option>
-         <option value="説明会">説明会</option>
-         <option value="一次面接">一次面接</option>
-         <option value="二次面接">二次面接</option>
-         <option value="最終面接">最終面接</option>
-         <option value="インターン">インターン</option>
-         <option value="オープンカンパニー">オープンカンパニー</option>
-         <option value="その他">その他</option>
-    </select>
-    <p>開催日</p>
-    <input type="date" name="start_date">
+        <div>
+            <h1>{{ company.company_name }}</h1>
+            <p class="company-meta">
+                💼 {{ company.genre }}　
+                | ⭐ 志望度：{{ company.priority }}　
+                | 📝 選考状況：{{ company.result }}
+            </p>
+        </div>
+    </div>
 
-    <p>開催時間</p>
-    <input type="time" name="start_time">
+    <!-- 基本情報 -->
+    <div class="info-card">
+        <h2>🪪 基本情報</h2>
 
+        <div class="info-row">
+            <span>マイページURL</span>
+            <a href="{{ company.mypage_url }}" target="_blank">開く</a>
+        </div>
 
-    <p>終了日時</p>
-    <input type="date" name="end_date" >
+        <div class="info-row">
+            <span>ログインID</span>
+            <span id="login_id">{{ company.login_id }}</span>
+            <button type="button" onclick="copyText('login_id')">コピー</button>
+        </div>
 
-    <p>終了時間</p>
-    <input type="time" name="end_time">
+        <div class="info-row">
+            <span>パスワード</span>
+            <span id="password">{{ company.password }}</span>
+            <button type="button" onclick="copyText('password')">コピー</button>
+        </div>
 
+        <div class="info-row">
+            <span>ES内容</span>
+            <span>{{ company.es_text }}</span>
+        </div>
+    </div>
 
-    <p>場所</p>
-    <input type="text" name="location">
+    <!-- イベント一覧 -->
+    <div class="info-card">
+        <h2>📅 イベント一覧</h2>
 
-    <p>メモ</p>
-    <textarea name="memo"></textarea>
+        {% if events %}
+            {% for event in events %}
+            <div class="event-card">
+                <div>
+                    <h3>{{ event[2] }}</h3>
+                    <p>📅 {{ event[3] }} 〜 {{ event[4] }}</p>
+                    <p>📍 {{ event[5] }}</p>
+                    <p>📝 {{ event[6] }}</p>
+                </div>
 
-   
-    <br><br>
+                <div class="event-buttons">
+                    <a href="/edit_event/{{ event[0] }}?user_id={{ user_id }}">
+                        <button type="button" class="edit-btn">編集</button>
+                    </a>
 
-    <button type="submit">イベント追加</button>
+                    <form action="/delete_event/{{ event[0] }}?user_id={{ user_id }}" method="post">
+                        <button type="submit" class="delete-btn">削除</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>まだイベントはありません</p>
+        {% endif %}
+    </div>
 
-</form>
+    <!-- イベント追加 -->
+    <div class="info-card">
+        <h2>＋ イベントを追加</h2>
 
-<a href="/list?user_id={{ user_id }}">
-    一覧へ戻る
-</a>
+        <form action="/add_event/{{ company.id }}?user_id={{ user_id }}" method="post">
+            <p>イベント種類</p>
+            <select name="event_type">
+                <option value="ES締切">ES締切</option>
+                <option value="Webテスト締切">Webテスト締切</option>
+                <option value="説明会">説明会</option>
+                <option value="一次面接">一次面接</option>
+                <option value="二次面接">二次面接</option>
+                <option value="最終面接">最終面接</option>
+                <option value="インターン">インターン</option>
+                <option value="その他">その他</option>
+            </select>
+
+            <p>開催日</p>
+            <input type="date" name="start_date">
+
+            <p>開催時間</p>
+            <input type="time" name="start_time">
+
+            <p>終了日</p>
+            <input type="date" name="end_date">
+
+            <p>終了時間</p>
+            <input type="time" name="end_time">
+
+            <p>場所</p>
+            <input type="text" name="place">
+
+            <p>メモ</p>
+            <textarea name="memo"></textarea>
+
+            <button type="submit" class="add-event-btn">＋ イベントを追加</button>
+        </form>
+    </div>
+
 </div>
+
 <script>
-function copyLoginId() {
-    navigator.clipboard.writeText(
-        document.getElementById("login_id").value
-    );
+function copyText(id){
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text);
     alert("コピーしました");
 }
 </script>
+
 </body>
 </html>
