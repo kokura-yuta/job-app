@@ -116,14 +116,24 @@
 
 <h1>{{ company.company_name }}</h1>
 
-<p>マイページURL: {{ company.mypage_url }}</p>
-<p>ログインID: {{ company.login_id }}</p>
-<p>結果: {{ company.result }}</p>
+<p>マイページURL: 
+<a href="{{ company.mypage_url }}" target="_blank">
+    開く
+</a>
+</p>
+<input
+    type="text"
+    value="{{ company.login_id }}"
+    readonlyid="login_id"
+>
+
+<button onclick="copyLoginId()">
+    コピー
+</button>
 <p>メモ: {{ company.memo }}</p>
 <p>パスワード: {{ company.password }}</p>
 <p>ES内容: {{ company.es_text }}</p>
-<p>ジャンル: {{ company.genre }}</p>
-<p>優先度: {{ company.priority }}</p>
+
 
 </div>
 <hr>
@@ -197,5 +207,13 @@
     一覧へ戻る
 </a>
 </div>
+<script>
+function copyLoginId() {
+    navigator.clipboard.writeText(
+        document.getElementById("login_id").value
+    );
+    alert("コピーしました");
+}
+</script>
 </body>
 </html>
