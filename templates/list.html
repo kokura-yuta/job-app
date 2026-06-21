@@ -172,9 +172,7 @@
            </a>
        </h2>
        <p>
-        💼 {{ company.genre }} | ⭐️志望度:{{ company.priority }}</p>
-       <p>
-       🗒️選考状況: 
+        💼 {{ company.genre }} | ⭐️志望度:{{ company.priority }}|🗒️選考状況: 
        {% if company.result == "内定" or company.result == "内々定" %}
        <span style="color: red;">{{company.result}}</span>
        {% elif company.result == "不合格" %}
