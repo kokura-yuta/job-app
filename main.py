@@ -428,7 +428,7 @@ def edit_event(
             start_datetime = %s,
             end_datetime = %s,
             location = %s,
-            memo = %s,
+            memo = %s
         WHERE id = %s
     """, (
         title,
