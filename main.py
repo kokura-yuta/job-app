@@ -85,27 +85,32 @@ CREATE TABLE IF NOT EXISTS events (
 try:
     cursor.execute("ALTER TABLE companies ADD COLUMN genre TEXT")
 except Exception:
+    conn.rollback()
     pass
 
 try:
     cursor.execute("ALTER TABLE events ADD COLUMN location TEXT")
 except Exception:
+    conn.rollback()
     pass
 
 try: 
     cursor.execute("ALTER TABLE events ADD COLUMN event_type TEXT")
 except Exception:
+    conn.rollback()
     pass
 
 
 try:
     cursor.execute("ALTER TABLE companies ADD COLUMN priority TEXT")
 except Exception:
+    conn.rollback()
     pass
 
 try:
     cursor.execute("ALTER TABLE companies ADD COLUMN user_id INTEGER")
 except Exception:
+    conn.rollback()
     pass
 
 
@@ -632,6 +637,7 @@ def register_user(
         conn.commit()
 
     except Exception:
+      conn.rollback()
       return HTMLResponse("このユーザー名はすでに使われています")
 
     return RedirectResponse(
