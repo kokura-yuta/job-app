@@ -1,11 +1,15 @@
 from fastapi import FastAPI, Request, Form, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-import sqlite3
+import os
+import psycopg2
 import calendar
 from datetime import datetime
-
 app = FastAPI()
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+def get_conn():
+    return psycopg2.connect(DATABASE_URL)
 
 @app.get("/")
 def home():
@@ -26,11 +30,11 @@ def add_page(request: Request, user_id: int):
     )
 companies = []
 
-conn = sqlite3.connect("job_app.db", check_same_thread=False)
+conn = get_conn()
 cursor = conn.cursor()
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS companies (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     company_name TEXT,
     mypage_url TEXT,
     login_id TEXT,
@@ -46,7 +50,7 @@ CREATE TABLE IF NOT EXISTS companies (
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     username TEXT UNIQUE,
     email TEXT,
     password TEXT
@@ -55,22 +59,22 @@ CREATE TABLE IF NOT EXISTS users (
 
 try:
     cursor.execute("ALTER TABLE users ADD COLUMN email TEXT")
-except sqlite3.OperationalError:
+except Exception:
     pass
 
 try:
     cursor.execute("ALTER TABLE users ADD COLUMN reset_token TEXT")
-except sqlite3.OperationalError:
+except Exception:
     pass
 
 try:
     cursor.execute("ALTER TABLE users ADD COLUMN reset_token_expire TEXT")
-except sqlite3.OperationalError:
+except Exception:
     pass
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS events (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY ,
     company_id INTEGER,
     title TEXT,
     start_datetime TEXT,
@@ -80,28 +84,28 @@ CREATE TABLE IF NOT EXISTS events (
 """)
 try:
     cursor.execute("ALTER TABLE companies ADD COLUMN genre TEXT")
-except sqlite3.OperationalError:
+except Exception:
     pass
 
 try:
     cursor.execute("ALTER TABLE events ADD COLUMN location TEXT")
-except sqlite3.OperationalError:
+except Exception:
     pass
 
 try: 
     cursor.execute("ALTER TABLE events ADD COLUMN event_type TEXT")
-except sqlite3.OperationalError:
+except Exception:
     pass
 
 
 try:
     cursor.execute("ALTER TABLE companies ADD COLUMN priority TEXT")
-except sqlite3.OperationalError:
+except Exception:
     pass
 
 try:
     cursor.execute("ALTER TABLE companies ADD COLUMN user_id INTEGER")
-except sqlite3.OperationalError:
+except Exception:
     pass
 
 
@@ -141,7 +145,7 @@ def add_company(
         priority,
         user_id
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 """, (
     company_name,
         mypage_url,
@@ -167,15 +171,15 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     )
 @app.get("/list", response_class=HTMLResponse)
 def show_list(request: Request, user_id: int, keyword: str = Query("")):
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     if keyword:
         cursor.execute(
             """
             SELECT * FROM companies 
-            WHERE user_id = ?
-            AND company_name LIKE ?
+            WHERE user_id = %s
+            AND company_name LIKE %s
             ORDER BY deadline ASC
             """,
             (user_id, f"%{keyword}%",)
@@ -184,7 +188,7 @@ def show_list(request: Request, user_id: int, keyword: str = Query("")):
         cursor.execute(
             """
             SELECT * FROM companies 
-            WHERE user_id = ?
+            WHERE user_id = %s
             ORDER BY deadline ASC
             """,
             (user_id,)
@@ -238,14 +242,14 @@ def company_detail(
     company_id: int, 
     user_id: int
 ):
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute(
         """
         SELECT * FROM companies
-        WHERE id = ?
-        AND user_id = ?
+        WHERE id = %s
+        AND user_id = %s
         """,
         (company_id, user_id)
     )
@@ -259,7 +263,7 @@ def company_detail(
     cursor.execute(
        """
        SELECT * FROM events
-       WHERE company_id = ?
+       WHERE company_id = %s
        ORDER BY start_datetime ASC
        """,
        (company_id,)
@@ -297,9 +301,9 @@ def company_detail(
 
 @app.post("/delete/{id}")
 def delete_company(id: int, user_id: int):
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM companies WHERE id = ? AND user_id = ?", (id, user_id))
+    cursor.execute("DELETE FROM companies WHERE id = %s AND user_id = %s", (id, user_id))
     
     conn.commit()
     conn.close()
@@ -336,7 +340,7 @@ def add_event(
             memo,
             event_type
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """,
         (
             company_id,
@@ -358,10 +362,10 @@ def add_event(
 
 @app.post("/delete_event/{event_id}")
 def delete_company(event_id: int, user_id: int):
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "DELETE FROM events WHERE id = ?", 
+        "DELETE FROM events WHERE id = %s", 
         (event_id,)
         )
     conn.commit()
@@ -373,10 +377,10 @@ def delete_company(event_id: int, user_id: int):
 
 @app.get("/edit_event/{event_id}", response_class=HTMLResponse)
 def edit_event_page(request: Request, event_id: int, user_id: int):
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM events WHERE id = ?", (event_id,))
+    cursor.execute("SELECT * FROM events WHERE id = %s", (event_id,))
     event = cursor.fetchone()
     conn.close()
     if not event:
@@ -410,17 +414,17 @@ def edit_event(
     start_datetime = f"{start_date} {start_time}"
     end_datetime = f"{end_date} {end_time}"
 
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
         UPDATE events
-        SET title = ?,
-            start_datetime = ?,
-            end_datetime = ?,
-            location = ?,
-            memo = ?
-        WHERE id = ?
+        SET title = %s,
+            start_datetime = %s,
+            end_datetime = %s,
+            location = %s,
+            memo = %s,
+        WHERE id = %s
     """, (
         title,
         start_datetime,
@@ -438,13 +442,13 @@ def edit_event(
     )
 @app.get("/edit/{id}")
 def edit_company(id: int, request: Request, user_id: int):
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute(
         """ 
-        SELECT * FROM companies WHERE id = ?
-        AND user_id = ?
+        SELECT * FROM companies WHERE id = %s
+        AND user_id = %s
         """, 
         (id, user_id)
     )
@@ -508,14 +512,14 @@ def calendar_page(
     if next_month == 13:
         next_month = 1
         next_year = year + 1
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT events.*, companies.company_name
         FROM events
         JOIN companies ON events.company_id = companies.id
-        WHERE companies.user_id = ?
+        WHERE companies.user_id = %s
         ORDER BY events.start_datetime ASC
    """, (user_id,))
 
@@ -560,23 +564,23 @@ def update_company(
     priority: str = Form(""),
    
 ):
-    local_conn = sqlite3.connect("job_app.db", timeout=30, check_same_thread=False)
+    local_conn = get_conn()
     local_cursor = local_conn.cursor()
     local_cursor.execute("""
     UPDATE companies
     SET
-        company_name = ?,
-        mypage_url = ?,
-        login_id = ?,
-        password = ?,
-        es_text = ?,
-        deadline = ?,
-        event_date = ?,
-        result = ?,
-        memo = ?,
-        genre = ?,
-        priority = ?
-    WHERE id = ? AND user_id = ?
+        company_name = %s,
+        mypage_url = %s,
+        login_id = %s,
+        password = %s,
+        es_text = %s,
+        deadline = %s,
+        event_date = %s,
+        result = %s,
+        memo = %s,
+        genre = %s,
+        priority = %s,
+    WHERE id = %s AND user_id = %s
     """, (
         company_name,
         mypage_url,
@@ -614,20 +618,20 @@ def register_user(
     email: str = Form(...),
     password: str = Form(...)
 ):
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
     try:
         cursor.execute(
         """
         INSERT INTO users (username, email, password)
-        VALUES (?,?,?)
+        VALUES (%s,%s,%s)
         """,
         (username, email, password)
      )
 
         conn.commit()
 
-    except sqlite3.IntegrityError:
+    except Exception:
       return HTMLResponse("このユーザー名はすでに使われています")
 
     return RedirectResponse(
@@ -655,11 +659,11 @@ def forget_password(request: Request, email: str = Form(...)):
             }
         )
 
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM users WHERE email = ?",
+        "SELECT * FROM users WHERE email = %s",
         (email,)
     )
     user = cursor.fetchone()
@@ -688,11 +692,11 @@ def reset_password(
     email: str = Form(...),
     new_password: str = Form(...)
 ):
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute(
-        "UPDATE users SET password = ? WHERE email = ?",
+        "UPDATE users SET password = %s WHERE email = %s",
         (new_password, email)
     )
 
@@ -730,11 +734,11 @@ def login_user(
             "error": "ユーザー名とパスワードを入力してください",
             }
         )
-    conn = sqlite3.connect("job_app.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM users WHERE username = ? AND password = ?",
+        "SELECT * FROM users WHERE username = %s AND password = %s",
         (username, password)
     )
 
