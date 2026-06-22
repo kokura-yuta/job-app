@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>カレンダー</title>
-    <style>
+<style>
         body{
             font-family:Arial, sans-serif;
             background:#f5f7fa;
@@ -56,6 +56,13 @@
             color: #555;
             font-weight: bold;
         }
+
+        .sun{
+            color:#ef4444;
+        }
+        .sat{
+            color:#2563eb;
+        }
     @media (max-width: 768px){
 
         th, td{
@@ -73,29 +80,71 @@
             table-layout:fixed;
         }
     }
-    </style>
+
+    .calendar-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+        }
+
+        .nav-btn{
+            background:#4CAF50;
+            color:white;
+            padding:10px 16px;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:bold;
+        }
+
+        .back-area{
+            text-align:center;
+            margin-bottom:15px;
+        }
+
+        .back-btn{
+            background:#f1f5f9;
+            color:#333;
+            padding:8px 16px;
+            border-radius:10px;
+            text-decoration:none;
+        }
+</style>
 </head>
 <body>
 
-<a href="/calendar?user_id={{ user_id }}&year={{ prev_year }}&month={{ prev_month }}">
-    ←前月
-</a>
-<h1>{{ year }}年{{ month }}月</h1>
-<a href="/calendar?user_id={{ user_id }}&year={{ next_year }}&month={{ next_month }}">
-    次月→
-</a>
+<div class="calendar-header">
 
-<a href="/list?user_id={{ user_id }}">一覧に戻る</a>
+    <a class="nav-btn"
+       href="/calendar?user_id={{ user_id }}&year={{ prev_year }}&month={{ prev_month }}">
+       ←
+    </a>
+
+    <h1>{{ year }}年{{ month }}月</h1>
+
+    <a class="nav-btn"
+       href="/calendar?user_id={{ user_id }}&year={{ next_year }}&month={{ next_month }}">
+       →
+    </a>
+
+</div>
+
+<div class="back-area">
+    <a class="back-btn"
+       href="/list?user_id={{ user_id }}">
+       一覧に戻る
+    </a>
+</div>
 
 <table>
     <tr>
-        <th>月</th>
-        <th>火</th>
-        <th>水</th>
-        <th>木</th>
-        <th>金</th>
-        <th>土</th>
-        <th>日</th>
+        <th class="mon">月</th>
+        <th class="tue">火</th>
+        <th class="wed">水</th>
+        <th class="thu">木</th>
+        <th class="fri">金</th>
+        <th class="sat">土</th>
+        <th class="sun">日</th>
     </tr>
 
     {% for week in calendar_days %}
