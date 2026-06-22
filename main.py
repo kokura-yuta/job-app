@@ -768,6 +768,11 @@ def logout():
         url="/login",
         status_code=303
     )
-
+@app.get("/privacy", response_class=HTMLResponse)
+def privacy(request: Request):
+    return templates.TemplateResponse(
+        "privacy.html",
+        {"request": request}
+    )
 
 
