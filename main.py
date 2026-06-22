@@ -775,4 +775,12 @@ def privacy(request: Request):
         {"request": request}
     )
 
+@app.get("/terms", response_class=HTMLResponse)
+def terms(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="terms.html",
+        context={"request": request}
+    )
+
 
