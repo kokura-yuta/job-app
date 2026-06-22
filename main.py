@@ -58,17 +58,17 @@ CREATE TABLE IF NOT EXISTS users (
 """)
 
 try:
-    cursor.execute("ALTER TABLE users ADD COLUMN email TEXT")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT")
 except Exception:
     pass
 
 try:
-    cursor.execute("ALTER TABLE users ADD COLUMN reset_token TEXT")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token TEXT")
 except Exception:
     pass
 
 try:
-    cursor.execute("ALTER TABLE users ADD COLUMN reset_token_expire TEXT")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expire TEXT")
 except Exception:
     pass
 
@@ -83,32 +83,32 @@ CREATE TABLE IF NOT EXISTS events (
 )
 """)
 try:
-    cursor.execute("ALTER TABLE companies ADD COLUMN genre TEXT")
+    cursor.execute("ALTER TABLE companies ADD COLUMN IF NOT EXISTS genre TEXT")
 except Exception:
     conn.rollback()
     pass
 
 try:
-    cursor.execute("ALTER TABLE events ADD COLUMN location TEXT")
+    cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS location TEXT")
 except Exception:
     conn.rollback()
     pass
 
 try: 
-    cursor.execute("ALTER TABLE events ADD COLUMN event_type TEXT")
+    cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS event_type TEXT")
 except Exception:
     conn.rollback()
     pass
 
 
 try:
-    cursor.execute("ALTER TABLE companies ADD COLUMN priority TEXT")
+    cursor.execute("ALTER TABLE companies ADD COLUMN IF NOT EXISTS priority TEXT")
 except Exception:
     conn.rollback()
     pass
 
 try:
-    cursor.execute("ALTER TABLE companies ADD COLUMN user_id INTEGER")
+    cursor.execute("ALTER TABLE companies ADD COLUMN IF NOT EXISTS user_id INTEGER")
 except Exception:
     conn.rollback()
     pass
