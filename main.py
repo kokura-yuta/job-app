@@ -584,7 +584,7 @@ def update_company(
         result = %s,
         memo = %s,
         genre = %s,
-        priority = %s,
+        priority = %s
     WHERE id = %s AND user_id = %s
     """, (
         company_name,
