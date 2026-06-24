@@ -771,6 +771,7 @@ def logout():
 @app.get("/privacy", response_class=HTMLResponse)
 def privacy(request: Request):
     return templates.TemplateResponse(
+        request=request,
         name="privacy.html",
         context={"request": request}
     )
