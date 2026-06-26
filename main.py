@@ -768,6 +768,34 @@ def logout():
         url="/login",
         status_code=303
     )
+@app.post("/delete_account")
+def delete_account(user_id: int = Form(...)):
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM events WHERE company_id IN (SELECT id FROM companies WHERE user_id = %s)",
+        (user_id,)
+    )
+
+    cursor.execute(
+        "DELETE FROM companies WHERE user_id = %s",
+        (user_id,)
+    )
+
+    cursor.execute(
+        "DELETE FROM users WHERE id = %s",
+        (user_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        url="/login",
+        status_code=303
+    )
+
 @app.get("/privacy", response_class=HTMLResponse)
 def privacy(request: Request):
     return templates.TemplateResponse(

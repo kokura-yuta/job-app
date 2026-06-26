@@ -145,6 +145,15 @@
     <a href="/logout">
         <button type="button">ログアウト</button>
     </a>
+    <form action="/delete_account" method="post" style="display:inline;">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+        <button
+            type="submit"
+            onclick="return confirm('本当にアカウントを削除しますか？登録したデータはすべて削除されます。')">
+            アカウント削除
+    </button>
+    </form>
+    
     <h1>登録企業一覧</h1>
     <div class="search-box">
     <form action="/list" method="get">
