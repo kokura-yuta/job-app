@@ -243,7 +243,7 @@
             {% for event in events %}
             <div class="event-card">
                 <div>
-                    <h3>{{ event[2] }}</h3>
+                    <h3>{{ event[7] or event[2] }}</h3>
                     <p>📅 {{ event[3] }} 〜 {{ event[4] }}</p>
                     <p>📍 {{ event[5] }}</p>
                     <p>📝 {{ event[6] }}</p>

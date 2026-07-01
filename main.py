@@ -334,6 +334,9 @@ def add_event(
 ):
     start_datetime = f"{start_date} {start_time}"
     end_datetime = f"{end_date} {end_time}"
+
+    if title == "":
+        title = event_type
     cursor.execute(
         """
         INSERT INTO events (
